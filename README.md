@@ -1,4 +1,5 @@
 jumpcityrecords
 ===============
 
-automated record production
+Automated record production.
+
