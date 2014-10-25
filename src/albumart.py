@@ -5,7 +5,7 @@ albumart.py
 Using Cairo to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
-import cairo # On Ubuntu: sudo apt-get install python-cairo
+import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
 import jumpcity
 from jumpcity import rnd
 import rotate
@@ -14,7 +14,7 @@ import random
 
 
 def randomcolor():
-    return jumpcity.rnd(1), jumpcity.rnd(1), jumpcity.rnd(1)
+    return rnd(1), rnd(1), rnd(1)
 
 
 def randomrectangle_candidate(w, h):
@@ -29,7 +29,7 @@ def randomrectangle_candidate(w, h):
     # Now rotate it randomly.
     r = rotate.rotatedrectangle(r, rnd(360))
     # Check whether every coordinate of the rectangle lies within (0,0)-(w,h) (with a 5% margin)
-    topmargin, rightmargin, bottommargin, leftmargin = w * 0.05, w * 0.95, h * 0.95, h * 0.05 
+    topmargin, rightmargin, bottommargin, leftmargin = h * 0.05, w * 0.95, h * 0.95, w * 0.05 
     for p in r:
         if p.x < leftmargin or p.x > rightmargin: return None
         if p.y < topmargin or p.y > bottommargin: return None
@@ -49,7 +49,7 @@ def drawrectangle(cr, r):
     cr.fill()
     
 
-def render(cr, w, h):
+def render(cr, w, h, albumtitle=None):
     splith = h * 0.8
     # Colored background.
     # IDEA: use H,S,L color model with constraints on all components.
@@ -75,8 +75,9 @@ def render(cr, w, h):
     albumtitle_baseline = h * 0.894
     albumtitle_left = w * 0.0275
     cr.move_to(albumtitle_left, albumtitle_baseline)
-    title = jumpcity.randomname()
-    cr.show_text(title)
+    if not albumtitle:
+        albumtitle = jumpcity.randomname()
+    cr.show_text(albumtitle)
     # Recordlabel name.
     cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
     cr.select_font_face("Courier New", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
@@ -88,3 +89,12 @@ def render(cr, w, h):
     releasenumber_left = w * 0.897
     cr.move_to(releasenumber_left, recordlabelname_baseline)
     cr.show_text("%04d" % int(random.uniform(0, 10000)))
+    
+if __name__ == "__main__":
+    for i in xrange(20):
+        w, h = 725, 725
+        ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(ims)
+        albumtitle = jumpcity.randomname()
+        render(cr, w, h, albumtitle)
+        ims.write_to_png(albumtitle + ".png")
