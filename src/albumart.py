@@ -11,6 +11,7 @@ from jumpcity import rnd
 import rotate
 from rotate import Rectangle, Point
 import random
+import os
 
 
 def randomcolor():
@@ -19,8 +20,8 @@ def randomcolor():
 
 def randomrectangle_candidate(w, h):
     center = Point(rnd(w), rnd(h))
-    rw = max(rnd(w / 2), 20) # Not too thin: minimum width and height 20 pixels.
-    rh = max(rnd(h / 2), 20)
+    rw = max(rnd(w * 0.9), 20) # Not too thin: minimum width and height 20 pixels.
+    rh = max(rnd(h * 0.9), 20)
     r = Rectangle(
         Point(center.x - rw / 2, center.y + rh / 2),
         Point(center.x + rw / 2, center.y + rh / 2),
@@ -89,12 +90,22 @@ def render(cr, w, h, albumtitle=None):
     releasenumber_left = w * 0.897
     cr.move_to(releasenumber_left, recordlabelname_baseline)
     cr.show_text("%04d" % int(random.uniform(0, 10000)))
-    
+    # Outline.
+    cr.rectangle(0, 0, w, h)
+    cr.set_source_rgb(0.85, 0.85, 0.85) # Light gray.
+    cr.set_line_width(1)
+    cr.stroke()
+
+
 if __name__ == "__main__":
-    for i in xrange(20):
+    # Generate some example images, store them in the 'output' subdirectory.
+    if not os.path.exists("output"):
+        os.mkdir("output")
+    for i in xrange(100):
         w, h = 725, 725
         ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         cr = cairo.Context(ims)
         albumtitle = jumpcity.randomname()
         render(cr, w, h, albumtitle)
-        ims.write_to_png(albumtitle + ".png")
+        filename = albumtitle + ".png"
+        ims.write_to_png(os.path.join("output", filename))
