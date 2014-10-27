@@ -24,7 +24,23 @@ def hhmmss2seconds(x):
     h, m, s = x.split(":")
     return float(h) * 3600 + float(m) * 60 + float(s)
 
-    
+
+def seconds2hhmmss(x):
+    "Convert a number of seconds (as a float) to a string like '01:23:58.230'."
+    left = float(x)
+    h = int(left / 3600.0)
+    left -= 3600.0 * h
+    m = int(left / 60.0)
+    left -= 60.0 * m
+    s = int(left)
+    left -= s
+    if left >= 0.001:
+        left = int(round(left * 1000))
+        return "%02d:%02d:%02d.%03d" % (h, m, s, left)
+    else:
+        return "%02d:%02d:%02d" % (h, m, s)
+
+
 def soundfileduration(fn):
     "Use soxi to determine the duration of a sound file, in seconds."
     p = subprocess.Popen(("soxi", fn), stdout=subprocess.PIPE)
@@ -39,6 +55,12 @@ def soundfileduration(fn):
 
 if __name__ == "__main__":
     print randomname()
+
     print rnd(100)
-    fn = "/Users/user/Desktop/jumpcityrecords-audio/backgrounds/nature/Madacy - Earth sounds - Ocean surf.mp3"
+
+    fn = "../audio/backgrounds/nature/ocean.mp3"
     print soundfileduration(fn)
+
+    secs = hhmmss2seconds("01:23:58.230")
+    print secs
+    print seconds2hhmmss(secs)
