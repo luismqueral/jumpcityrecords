@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 
 '''
 Create a 'song' consisting of three layers:
