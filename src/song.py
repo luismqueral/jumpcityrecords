@@ -4,7 +4,7 @@
 Create a 'song' consisting of three layers:
 
   A) an ambient atmospheric background layer
-  [TODO] B) foreground material (like an instrument playing, or spoken word)
+  B) foreground material (like an instrument playing, or spoken word)
   [TODO] C) random sound effects (like telephones, horns, other short sounds)
 
 The following directory structure is assumed:
@@ -32,11 +32,29 @@ import os
 import random
 import glob
 import jumpcity
+import datetime
 
 CROSSFADE = 4 # Duration of crossfades, in seconds.
 BGPARTS = 4 # Number of parts in the background.
-MINDUR = 6 # Minimum duration of a background fragment.
-MAXDUR = 15 # Maximum duration of a background fragment.
+BGMINDUR = 10 # Minimum duration of a background fragment.
+BGMAXDUR = 30 # Maximum duration of a background fragment.
+
+class Track(object):
+    def __init__(self, filename, mindur, maxdur, fadedur=CROSSFADE):
+        self.filename = filename
+        self.duration = jumpcity.soundfileduration(filename)
+        if not self.duration:
+            raise ValueError("Soxi can't determine the duration of '%s'" % filename)
+        self.length = int(random.uniform(mindur, maxdur)) # Choose a fragment
+        self.start = int(random.uniform(0, self.duration - self.length - fadedur * 2)) # Let it come from anywhere in the source file.
+        
+    def __str__(self):
+        return "Track %s duration %s, extract from %s to %s, duration %s" % \
+            (self.filename, jumpcity.seconds2hhmmss(self.duration),
+            jumpcity.seconds2hhmmss(self.start), 
+            jumpcity.seconds2hhmmss(self.start + self.length),
+            jumpcity.seconds2hhmmss(self.length)
+            )
 
 # For the background layer: choose a style, and take BGPARTS random segments from that.
 backgroundstyles = []
@@ -50,25 +68,10 @@ backgroundfiles = []
 for fn in glob.glob(os.path.join(backgroundstyle, "*")):
     backgroundfiles.append(fn)
     
-class BackgroundTrack(object):
-    def __init__(self, filename):
-        self.filename = filename
-        self.duration = jumpcity.soundfileduration(filename)
-        self.length = int(random.uniform(MINDUR, MAXDUR)) # Choose a fragment
-        self.start = int(random.uniform(0, self.duration - self.length - CROSSFADE * 2)) # Let it come from anywhere in the source file.
-        
-    def __str__(self):
-        return "Track %s duration %s, extract from %s to %s, duration %s" % \
-            (self.filename, jumpcity.seconds2hhmmss(self.duration),
-            jumpcity.seconds2hhmmss(self.start), 
-            jumpcity.seconds2hhmmss(self.start + self.length),
-            jumpcity.seconds2hhmmss(self.length)
-            )
-
-mixercmd = "sox -m "
+bgmixercmd = "sox -m "
 cumul = 0.0
 for nr, fn in enumerate(random.sample(backgroundfiles, BGPARTS)):
-    tr = BackgroundTrack(fn)
+    tr = Track(fn, BGMINDUR, BGMAXDUR)
     print tr
     
     if nr in (0, 3): 
@@ -91,8 +94,68 @@ for nr, fn in enumerate(random.sample(backgroundfiles, BGPARTS)):
     ofn = "layer%d.wav" % nr
     soxcmd = "sox %s %s %s %s %s" % (tr.filename, ofn, trim, fade, delay)
     os.system(soxcmd)
-    mixercmd += ofn + " "
+    bgmixercmd += ofn + " "
 
-mixercmd += " bg.wav"
-os.system(mixercmd)
-os.system("play -q bg.wav")
+bgmixercmd += " bg.wav norm -6 vol 0.8"
+os.system(bgmixercmd)
+
+# Foreground. 
+#
+# First, make a list of all available foreground samples.
+foregroundfns = []
+for dir, subdirs, fns in os.walk("../audio/foregrounds"):
+    for fn in fns:
+        if fn.endswith(".wav"):
+            foregroundfns.append(os.path.join(dir, fn))
+
+# This records how many foreground tracks are simulateously playing on each second:
+occupied = [0] * int(cumul)
+
+while True:
+    print "Building foreground candidate..."
+    tracks = []
+    trackfns = random.sample(foregroundfns, 3) # 3 = Nr. of foreground excerpts in the foreground track.
+    for fn in trackfns: 
+        print fn
+        tr = Track(fn, 10, cumul - 10)
+        tr.songstart = random.uniform(6, cumul - tr.length - 6)
+        for sec in xrange(int(tr.songstart), int(tr.length)):
+            occupied[sec] += 1
+        tracks.append(tr)
+        
+    # We don't want too much silence in the foreground. If there is, try another candidate foreground track.
+    silence = len([x for x in occupied if x == 0])
+    silenceperc = float(silence) / cumul * 100.0
+    if silenceperc > 30:
+        print "Too much silence, retrying..."
+        continue
+
+    # Mix together the foreground components.
+    fgmixercmd = "sox -m "
+    for nr, tr in enumerate(tracks):
+        FGFADE = 0.5
+        fadelength = float(tr.length) + FGFADE # Short fades.
+        trimlength = float(tr.length) + FGFADE * 2
+        trimstart = max(0, (float(tr.start) - FGFADE / 2))
+        trim = "trim %f %f" % (trimstart, trimlength)
+        fade = "fade t %f %f %f" % (FGFADE, fadelength, FGFADE)
+
+        delaylength = max(0, (float(tr.songstart) - FGFADE / 2))
+        delay = "delay %f %f" % (delaylength, delaylength)
+
+        # Random filters to apply.
+        filters = ("highpass -1 5000 pitch -1000 norm -6", "flanger 20", "reverb",
+            "chorus 0.6 0.9 50 0.4 0.25 2 -t 60 0.32 0.4 1.3 -s", "phaser 0.6 0.66 3 0.6 2 -t")
+
+        ofn = "layer%d.wav" % nr
+        soxcmd = "sox %s %s %s %s %s %s" % (tr.filename, ofn, trim, fade, delay, random.choice(filters))
+        os.system(soxcmd)
+        fgmixercmd += ofn + " "
+    break
+        
+fgmixercmd += " fg.wav norm -3"
+
+os.system(fgmixercmd)
+comboname = "combo-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
+os.system("sox -m bg.wav fg.wav %s" % comboname)
+os.system("play -q %s" % comboname)
