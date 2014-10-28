@@ -30,8 +30,12 @@ def randomrectangle_candidate(w, h):
         Point(center.x + rw / 2, center.y + rh / 2),
         Point(center.x + rw / 2, center.y - rh / 2),
         Point(center.x - rw / 2, center.y - rh / 2))
-    # Now rotate it randomly.
-    r = rotate.rotatedrectangle(r, rnd(360))
+    # Now rotate it randomly. There's a fifty-fifty percent change that the rotation will be strongly vertical/horizontal aligned.
+    if rnd(100) > 50:
+        angle = rnd(360) # Completely arbitrary rotation.
+    else:
+        angle = rnd(4) - 2 # Almost horizontal/vertical ;-)
+    r = rotate.rotatedrectangle(r, angle)
     # Check whether every coordinate of the rectangle lies within (0,0)-(w,h) (with a 5% margin)
     topmargin, rightmargin, bottommargin, leftmargin = h * 0.05, w * 0.95, h * 0.95, w * 0.05 
     for p in r:
