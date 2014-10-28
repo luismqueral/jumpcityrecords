@@ -16,9 +16,19 @@ print "Creating a track from '%s' asset" % asset
 fns = glob.glob(os.path.join(asset, "*"))    
 
 mixercmd = "sox -m "
-for fn in random.sample(fns, 3):
+for nr, fn in enumerate(random.sample(fns, 3)):
     print "   ", fn
-    mixercmd += '"%s" ' % fn
+    panning = (
+        "1 2", # No panning for sample #1
+        "1 2v0.25", # Right panning for sample #2
+        "1v0.25 2", # Left panning for sample #3
+        )
+    layerfn = "layer%d.wav" % nr
+    cmd = 'sox "%s" "%s" remix %s' % (fn, layerfn, panning[nr])
+    print cmd
+    os.system(cmd)
+    
+    mixercmd += '"%s" ' % layerfn
 
 trackname = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
 mixercmd += trackname
