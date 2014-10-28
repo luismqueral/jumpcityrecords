@@ -31,7 +31,7 @@ for nr, fn in enumerate(random.sample(fns, 3)):
         "remix 1v0.25 2", # Left panning for sample #3
         )
     layerfn = "layer%d.wav" % nr
-    cmd = 'sox "%s" "%s" %s %s' % (fn, layerfn, panning[nr], fade)
+    cmd = 'sox "%s" "%s" %s repeat 99 %s' % (fn, layerfn, panning[nr], fade)
     print cmd
     os.system(cmd)
     
