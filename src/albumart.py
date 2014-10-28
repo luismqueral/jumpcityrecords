@@ -14,8 +14,11 @@ import random
 import os
 
 
-def randomcolor():
-    return rnd(1), rnd(1), rnd(1)
+def randomcolor(transfrom=None, transto=None):
+    if transfrom is None:
+        return rnd(1), rnd(1), rnd(1)
+    else:
+        return rnd(1), rnd(1), rnd(1), random.uniform(transfrom, transto)
 
 
 def randomrectangle_candidate(w, h):
@@ -52,20 +55,20 @@ def drawrectangle(cr, r):
 
 def render(cr, w, h, albumtitle=None):
     splith = h * 0.8
-    # Colored background.
-    # IDEA: use H,S,L color model with constraints on all components.
-    cr.set_source_rgb(*randomcolor())
-    cr.rectangle(0, 0, w, splith)
-    cr.fill()
-    # Backdrop for album title.
+    # Start with white background.
     cr.set_source_rgb(1, 1, 1) # White.
-    cr.rectangle(0, splith, w, h - splith)
+    cr.rectangle(0, 0, w, h)
+    cr.fill()
+    # Colored upper pane (backdrop for rectangles).
+    # IDEA: use H,S,L color model with constraints on all components.
+    cr.set_source_rgba(*randomcolor(0.8, 0.9))
+    cr.rectangle(0, 0, w, splith)
     cr.fill()
     # Figure.
     cr.set_line_width(0)
     if w > 100 and h > 100: # Refuse to draw in too small a space.
         for i in xrange(2): # Draw two rectangles.
-            cr.set_source_rgb(*randomcolor())
+            cr.set_source_rgba(*randomcolor(0.65, 0.8))
             r = randomrectangle(w, splith)
             drawrectangle(cr, r)
             cr.fill()
