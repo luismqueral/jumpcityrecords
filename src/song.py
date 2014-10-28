@@ -147,8 +147,15 @@ while True:
         filters = ("highpass -1 5000 pitch -1000 norm -6", "flanger 20", "reverb",
             "chorus 0.6 0.9 50 0.4 0.25 2 -t 60 0.32 0.4 1.3 -s", "phaser 0.6 0.66 3 0.6 2 -t")
 
+        panning = (
+            "remix 1 2v0.15",
+            "remix 1v0.15 2",
+            "remix 1 2v0.30",
+            "remix 1v0.30 2",
+            )
+
         ofn = "layer%d.wav" % nr
-        soxcmd = "sox %s %s %s %s %s %s" % (tr.filename, ofn, trim, fade, delay, random.choice(filters))
+        soxcmd = "sox %s %s %s %s %s %s %s" % (tr.filename, ofn, trim, panning[nr], fade, delay, random.choice(filters))
         os.system(soxcmd)
         fgmixercmd += ofn + " "
     break
