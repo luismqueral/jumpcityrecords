@@ -11,16 +11,10 @@ import datetime
 - Mix them.
 """
 
-assets = []
-for fn in glob.glob("../audio/_assets/*"):
-    assets.append(fn)
-asset = random.choice(assets)
+asset = random.choice(glob.glob("../audio/_assets/*"))
 print "Creating a track from '%s' asset" % asset
+fns = glob.glob(os.path.join(asset, "*"))    
 
-fns = []
-for fn in glob.glob(os.path.join(asset, "*")):
-    fns.append(fn)
-    
 mixercmd = "sox -m "
 for fn in random.sample(fns, 3):
     print "   ", fn
