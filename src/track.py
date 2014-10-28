@@ -14,7 +14,7 @@ import datetime
 
 MAXDUR = 60 # Maximum duration of mix.
 
-asset = random.choice(glob.glob("../audio/_assets/*"))
+asset = random.choice(glob.glob("../_assets/*"))
 print "Creating a track from '%s' asset" % asset
 fns = glob.glob(os.path.join(asset, "*"))    
 
