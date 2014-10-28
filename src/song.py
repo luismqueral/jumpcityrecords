@@ -39,6 +39,8 @@ BGPARTS = 4 # Number of parts in the background.
 BGMINDUR = 10 # Minimum duration of a background fragment.
 BGMAXDUR = 30 # Maximum duration of a background fragment.
 
+FGPARTS = 4 # Nr. of foreground excerpts in the foreground track.
+
 class Track(object):
     def __init__(self, filename, mindur, maxdur, fadedur=CROSSFADE):
         self.filename = filename
@@ -114,7 +116,7 @@ occupied = [0] * int(cumul)
 while True:
     print "Building foreground candidate..."
     tracks = []
-    trackfns = random.sample(foregroundfns, 3) # 3 = Nr. of foreground excerpts in the foreground track.
+    trackfns = random.sample(foregroundfns, FGPARTS)
     for fn in trackfns: 
         print fn
         tr = Track(fn, 10, cumul - 10)
@@ -144,14 +146,19 @@ while True:
         delay = "delay %f %f" % (delaylength, delaylength)
 
         # Random filters to apply.
-        filters = ("highpass -1 5000 pitch -1000 norm -6", "flanger 20", "reverb",
-            "chorus 0.6 0.9 50 0.4 0.25 2 -t 60 0.32 0.4 1.3 -s", "phaser 0.6 0.66 3 0.6 2 -t")
+        filters = (
+            "highpass -2 8000 norm -6", 
+            "pitch -1000",
+            "flanger 20", 
+            "reverb",
+            "chorus 0.6 0.9 50 0.4 0.25 2 -t 60 0.32 0.4 1.3 -s", 
+            "phaser 0.6 0.66 3 0.6 2 -t")
 
         panning = (
-            "remix 1 2v0.15",
-            "remix 1v0.15 2",
-            "remix 1 2v0.30",
-            "remix 1v0.30 2",
+            "remix 1      2v0.15",
+            "remix 1v0.15 2     ",
+            "remix 1      2v0.30",
+            "remix 1v0.30 2     ",
             )
 
         ofn = "layer%d.wav" % nr
@@ -165,4 +172,5 @@ fgmixercmd += " fg.wav norm -3"
 os.system(fgmixercmd)
 comboname = "combo-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
 os.system("sox -m bg.wav fg.wav %s" % comboname)
+print "%s written, now playing..."
 os.system("play -q %s" % comboname)
