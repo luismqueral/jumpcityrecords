@@ -78,9 +78,9 @@ def render(cr, w, h, albumtitle=None):
             cr.fill()
     # Album title.
     cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
-    cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(h * 0.065)
-    albumtitle_baseline = h * 0.894
+    cr.select_font_face("Transport Heavy", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    cr.set_font_size(h * 0.059)
+    albumtitle_baseline = h * 0.897
     albumtitle_left = w * 0.0275
     cr.move_to(albumtitle_left, albumtitle_baseline)
     if not albumtitle:
@@ -88,8 +88,8 @@ def render(cr, w, h, albumtitle=None):
     cr.show_text(albumtitle)
     # Recordlabel name.
     cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
-    cr.select_font_face("Courier New", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(h * 0.03)
+    cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    cr.set_font_size(h * 0.027)
     recordlabelname_baseline = h * 0.95
     cr.move_to(albumtitle_left, recordlabelname_baseline)
     cr.show_text("jump city records")
@@ -108,6 +108,7 @@ if __name__ == "__main__":
     # Generate some example images, store them in the 'output' subdirectory.
     if not os.path.exists("output"):
         os.mkdir("output")
+    print "Generating 100 album art pictures in ./output directory:"
     for i in xrange(100):
         w, h = 725, 725
         ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
