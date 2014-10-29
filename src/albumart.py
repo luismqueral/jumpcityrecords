@@ -78,11 +78,12 @@ def render(cr, w, h, albumtitle=None):
             cr.fill()
     # Album title.
     cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
-    cr.select_font_face("Transport Heavy", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(h * 0.059)
+    cr.select_font_face("Transport Medium", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    cr.set_font_size(h * 0.064)
     albumtitle_baseline = h * 0.897
     albumtitle_left = w * 0.0275
     cr.move_to(albumtitle_left, albumtitle_baseline)
+    albumtitle = "x79k2bl"
     if not albumtitle:
         albumtitle = jumpcity.randomname()
     cr.show_text(albumtitle)
@@ -108,23 +109,23 @@ if __name__ == "__main__":
     # Generate some example images, store them in the 'output' subdirectory.
     if not os.path.exists("output"):
         os.mkdir("output")
-    print "Generating 100 album art pictures in ./output directory:"
-    for i in xrange(100):
-        w, h = 725, 725
-        ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-        cr = cairo.Context(ims)
-        albumtitle = jumpcity.randomname()
-        render(cr, w, h, albumtitle)
-        filename = albumtitle + ".png"
-        ims.write_to_png(os.path.join("output", filename))
-    '''
-    print "Generating differently sized album art pictures in ./output directory:"
-    for i in xrange(100, 1200, 100):
-        w, h = i, i
-        ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-        cr = cairo.Context(ims)
-        albumtitle = jumpcity.randomname()
-        render(cr, w, h, albumtitle)
-        filename = "%04d.png" % i
-        ims.write_to_png(os.path.join("output", filename))
-    '''
+    if 1:
+        print "Generating 100 album art pictures in ./output directory:"
+        for i in xrange(100):
+            w, h = 725, 725
+            ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            cr = cairo.Context(ims)
+            albumtitle = jumpcity.randomname()
+            render(cr, w, h, albumtitle)
+            filename = albumtitle + ".png"
+            ims.write_to_png(os.path.join("output", filename))
+    if 1:
+        print "Generating differently sized album art pictures in ./output directory:"
+        for i in xrange(200, 1400, 50):
+            w, h = i, i
+            ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            cr = cairo.Context(ims)
+            albumtitle = jumpcity.randomname()
+            render(cr, w, h, albumtitle)
+            filename = "%04d.png" % i
+            ims.write_to_png(os.path.join("output", filename))
