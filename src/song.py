@@ -36,7 +36,7 @@ import datetime
 
 CROSSFADE = 4 # Duration of crossfades, in seconds.
 BGPARTS = 4 # Number of parts in the background.
-BGMINDUR = 10 # Minimum duration of a background fragment.
+BGMINDUR = 15 # Minimum duration of a background fragment.
 BGMAXDUR = 30 # Maximum duration of a background fragment.
 
 FGPARTS = 4 # Nr. of foreground excerpts in the foreground track.
@@ -94,7 +94,7 @@ for nr, fn in enumerate(random.sample(backgroundfiles, BGPARTS)):
     cumul += tr.length
 
     ofn = "layer%d.wav" % nr
-    soxcmd = "sox %s %s %s %s %s" % (tr.filename, ofn, trim, fade, delay)
+    soxcmd = 'sox "%s" %s %s %s %s' % (tr.filename, ofn, trim, fade, delay)
     os.system(soxcmd)
     bgmixercmd += ofn + " "
 
@@ -147,7 +147,7 @@ while True:
 
         # Random filters to apply.
         filters = (
-            "highpass -2 8000 norm -6", 
+            "highpass -1 5000 norm -6", 
             "pitch -1000",
             "flanger 20", 
             "reverb",
@@ -172,5 +172,12 @@ fgmixercmd += " fg.wav norm -3"
 os.system(fgmixercmd)
 comboname = "combo-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
 os.system("sox -m bg.wav fg.wav %s" % comboname)
-print "%s written, now playing..."
+print "%s written, now playing..." % comboname
 os.system("play -q %s" % comboname)
+
+s = raw_input("Make mp3? ")
+if s.startswith("y"):
+    os.system("lame %s" % comboname)
+print "deleting %s" % comboname
+os.unlink(comboname)
+
