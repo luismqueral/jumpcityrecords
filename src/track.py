@@ -21,7 +21,7 @@ def generate(mp3=True, play=False):
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
     asset = "../_assets/Axisem083_8" # TEST: Manual override.
     print "Creating a track from '%s' asset, target duration %s" % (asset, jumpcity.seconds2hhmmss(targetduration))
-    fns = glob.glob(os.path.join(asset, "*"))
+    fns = [fn for fn in glob.glob(os.path.join(asset, "*")) if not fn.endswith(".m4a")]
 
     mixercmd = "sox -m "
     for nr, fn in enumerate(random.sample(fns, 3)):
