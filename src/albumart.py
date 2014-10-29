@@ -117,3 +117,14 @@ if __name__ == "__main__":
         render(cr, w, h, albumtitle)
         filename = albumtitle + ".png"
         ims.write_to_png(os.path.join("output", filename))
+    '''
+    print "Generating differently sized album art pictures in ./output directory:"
+    for i in xrange(100, 1200, 100):
+        w, h = i, i
+        ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(ims)
+        albumtitle = jumpcity.randomname()
+        render(cr, w, h, albumtitle)
+        filename = "%04d.png" % i
+        ims.write_to_png(os.path.join("output", filename))
+    '''
