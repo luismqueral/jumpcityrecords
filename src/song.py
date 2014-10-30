@@ -1,11 +1,12 @@
 # -*- coding: utf8 -*-
 
 '''
-Create a 'song' consisting of three layers:
+song.py
+
+Create a 'song' consisting of two layers. Software by Michiel Overtoom, motoom@xs4all.nl
 
   A) an ambient atmospheric background layer
   B) foreground material (like an instrument playing, or spoken word)
-  [TODO] C) random sound effects (like telephones, horns, other short sounds)
 
 The following directory structure is assumed:
 
