@@ -6,12 +6,17 @@ import glob
 import jumpcity
 import datetime
 
-""" Create a track from random assets
+""" Create a track from random assets. Software by Michiel Overtoom, motoom@xs4all.nl
+
 - Choose a random directory from the _assets subdirectory.
 - Choose three random files in this subdirectory.
 - Mix them.
 
-TODO: use suprocess to execute SoX and also capture stderr to detect 'SOX FAIL' conditions.
+TODO: Error handling
+TODO: use suprocess to execute SoX and also capture stderr to detect 'FAIL' error conditions like: 
+  sox FAIL sox: Input files must have the same sample-rate
+  sox FAIL remix: too few input channels
+  soxi FAIL formats: can't open input file `brumbrum.wav': No such file or directory
 TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different bitrates.
 """
 
@@ -23,7 +28,6 @@ def generate(mp3=True, play=False):
     targetduration = int(random.uniform(MINDUR, MAXDUR))
 
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
-    asset = "../_assets/Axisem083_8" # TEST: Manual override.
     print "Creating a track from '%s' asset, target duration %s" % (asset, jumpcity.seconds2hhmmss(targetduration))
     fns = [fn for fn in glob.glob(os.path.join(asset, "*")) if not fn.endswith(".m4a")]
 
@@ -38,7 +42,7 @@ def generate(mp3=True, play=False):
             trimstart = max(0, (fndur - targetduration - 4))
             trimlength = targetduration
             trim = "trim %d %d" % (trimstart, trimlength)
-            print "    ...trimming to: %s" % jumpcity.seconds2hhmmss(trimstart)
+            print "    ...excerpt from %s to %s (duration %s)" % (jumpcity.seconds2hhmmss(trimstart), jumpcity.seconds2hhmmss(trimstart + trimlength), jumpcity.seconds2hhmmss(trimlength))
             fade = "fade 0 %d 4" % targetduration
             print "    ...fade: %s" % fade
         # If it is shorter than the target duration, repeat it.
@@ -53,7 +57,7 @@ def generate(mp3=True, play=False):
             "remix 1v0.25 2", # Left panning for sample #3
             )
         layerfn = "layer%d.wav" % nr
-        cmd = 'sox "%s" "%s" %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
+        cmd = 'sox "%s" "%s" channels 2 rate 44100 %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
         os.system(cmd)    
         print "    ...resulting duration: %s" % jumpcity.seconds2hhmmss(jumpcity.soundfileduration(layerfn))
         mixercmd += '"%s" ' % layerfn
@@ -64,8 +68,7 @@ def generate(mp3=True, play=False):
     os.system(mixercmd)
     print "done"
 
-    if 0:
-        os.system("rm layer*.wav") # Remove tempfiles.
+    os.system("rm layer*.wav") # Remove tempfiles.
 
     if play:
         os.system("play -q %s" % trackname)
@@ -77,6 +80,5 @@ def generate(mp3=True, play=False):
 
 
 if __name__ == "__main__":
-    for i in xrange(1):
+    for i in xrange(20):
         generate()
-        
