@@ -10,10 +10,14 @@ import datetime
 - Choose a random directory from the _assets subdirectory.
 - Choose three random files in this subdirectory.
 - Mix them.
+
+TODO: use suprocess to execute SoX and also capture stderr to detect 'SOX FAIL' conditions.
+TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different bitrates.
 """
 
 MINDUR = 15 # Minumum duration of mix.
 MAXDUR = 15 * 60 # Maximum duration of mix.
+
 
 def generate(mp3=True, play=False):
     targetduration = int(random.uniform(MINDUR, MAXDUR))
@@ -28,11 +32,15 @@ def generate(mp3=True, play=False):
         # See how long the sample is.
         fndur = jumpcity.soundfileduration(fn)
         print "    Source for layer%d: %s (duration %s)" % (nr, fn, jumpcity.seconds2hhmmss(fndur))
-        # If sample duration is longer than 'targetduration' seconds, fade it out.
-        fade = ""
+        # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
+        fade = trim = ""
         if fndur > targetduration:
+            trimstart = max(0, (fndur - targetduration - 4))
+            trimlength = targetduration
+            trim = "trim %d %d" % (trimstart, trimlength)
+            print "    ...trimming to: %s" % jumpcity.seconds2hhmmss(trimstart)
             fade = "fade 0 %d 4" % targetduration
-            print "    ...fading to: %s" % fade
+            print "    ...fade: %s" % fade
         # If it is shorter than the target duration, repeat it.
         repeat = ""
         if fndur < targetduration:
@@ -45,7 +53,7 @@ def generate(mp3=True, play=False):
             "remix 1v0.25 2", # Left panning for sample #3
             )
         layerfn = "layer%d.wav" % nr
-        cmd = 'sox "%s" "%s" %s %s %s' % (fn, layerfn, panning[nr], repeat, fade)
+        cmd = 'sox "%s" "%s" %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
         os.system(cmd)    
         print "    ...resulting duration: %s" % jumpcity.seconds2hhmmss(jumpcity.soundfileduration(layerfn))
         mixercmd += '"%s" ' % layerfn
@@ -56,7 +64,8 @@ def generate(mp3=True, play=False):
     os.system(mixercmd)
     print "done"
 
-    os.system("rm layer*.wav") # Remove tempfiles.
+    if 0:
+        os.system("rm layer*.wav") # Remove tempfiles.
 
     if play:
         os.system("play -q %s" % trackname)
@@ -68,6 +77,6 @@ def generate(mp3=True, play=False):
 
 
 if __name__ == "__main__":
-    for i in xrange(20):
+    for i in xrange(1):
         generate()
         
