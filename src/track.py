@@ -39,7 +39,7 @@ def generate(mp3=True, play=False):
         # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
         fade = trim = ""
         if fndur > targetduration:
-            trimstart = max(0, (fndur - targetduration - 4))
+            trimstart = random.uniform(0, max(0, (fndur - targetduration - 4)))
             trimlength = targetduration
             trim = "trim %d %d" % (trimstart, trimlength)
             print "    ...excerpt from %s to %s (duration %s)" % (jumpcity.seconds2hhmmss(trimstart), jumpcity.seconds2hhmmss(trimstart + trimlength), jumpcity.seconds2hhmmss(trimlength))
