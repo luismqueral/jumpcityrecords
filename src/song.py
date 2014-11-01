@@ -32,7 +32,7 @@ city and nature).
 import os
 import random
 import glob
-import jumpcity
+import utils
 import datetime
 
 CROSSFADE = 4 # Duration of crossfades, in seconds.
@@ -45,7 +45,7 @@ FGPARTS = 4 # Nr. of foreground excerpts in the foreground track.
 class Track(object):
     def __init__(self, filename, mindur, maxdur, fadedur=CROSSFADE):
         self.filename = filename
-        self.duration = jumpcity.soundfileduration(filename)
+        self.duration = utils.soundfileduration(filename)
         if not self.duration:
             raise ValueError("Soxi can't determine the duration of '%s'" % filename)
         self.length = int(random.uniform(mindur, maxdur)) # Choose a fragment
@@ -53,10 +53,10 @@ class Track(object):
         
     def __str__(self):
         return "Track %s duration %s, extract from %s to %s, duration %s" % \
-            (self.filename, jumpcity.seconds2hhmmss(self.duration),
-            jumpcity.seconds2hhmmss(self.start), 
-            jumpcity.seconds2hhmmss(self.start + self.length),
-            jumpcity.seconds2hhmmss(self.length)
+            (self.filename, utils.seconds2hhmmss(self.duration),
+            utils.seconds2hhmmss(self.start), 
+            utils.seconds2hhmmss(self.start + self.length),
+            utils.seconds2hhmmss(self.length)
             )
 
 # For the background layer: choose a style, and take BGPARTS random segments from that.

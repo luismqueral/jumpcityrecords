@@ -6,8 +6,8 @@ Using Cairo to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
 import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
-import jumpcity
-from jumpcity import rnd
+import utils
+from utils import rnd
 import rotate
 from rotate import Rectangle, Point
 import random
@@ -85,7 +85,7 @@ def render(cr, w, h, albumtitle=None):
     cr.move_to(albumtitle_left, albumtitle_baseline)
     albumtitle = "x79k2bl"
     if not albumtitle:
-        albumtitle = jumpcity.randomname()
+        albumtitle = utils.randomname()
     cr.show_text(albumtitle)
     # Recordlabel name.
     cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             w, h = 725, 725
             ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
             cr = cairo.Context(ims)
-            albumtitle = jumpcity.randomname()
+            albumtitle = utils.randomname()
             render(cr, w, h, albumtitle)
             filename = albumtitle + ".png"
             ims.write_to_png(os.path.join("output", filename))
@@ -125,7 +125,7 @@ if __name__ == "__main__":
             w, h = i, i
             ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
             cr = cairo.Context(ims)
-            albumtitle = jumpcity.randomname()
+            albumtitle = utils.randomname()
             render(cr, w, h, albumtitle)
             filename = "%04d.png" % i
             ims.write_to_png(os.path.join("output", filename))

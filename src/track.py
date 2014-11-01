@@ -3,7 +3,7 @@
 import os
 import random
 import glob
-import jumpcity
+import utils
 import datetime
 
 """ Create a track from random assets. Software by Michiel Overtoom, motoom@xs4all.nl
@@ -28,21 +28,21 @@ def generate(mp3=True, play=False):
     targetduration = int(random.uniform(MINDUR, MAXDUR))
 
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
-    print "Creating a track from '%s' asset, target duration %s" % (asset, jumpcity.seconds2hhmmss(targetduration))
+    print "Creating a track from '%s' asset, target duration %s" % (asset, utils.seconds2hhmmss(targetduration))
     fns = [fn for fn in glob.glob(os.path.join(asset, "*")) if not fn.endswith(".m4a")]
 
     mixercmd = "sox -m "
     for nr, fn in enumerate(random.sample(fns, 3)):
         # See how long the sample is.
-        fndur = jumpcity.soundfileduration(fn)
-        print "    Source for layer%d: %s (duration %s)" % (nr, fn, jumpcity.seconds2hhmmss(fndur))
+        fndur = utils.soundfileduration(fn)
+        print "    Source for layer%d: %s (duration %s)" % (nr, fn, utils.seconds2hhmmss(fndur))
         # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
         fade = trim = ""
         if fndur > targetduration:
             trimstart = random.uniform(0, max(0, (fndur - targetduration - 4)))
             trimlength = targetduration
             trim = "trim %d %d" % (trimstart, trimlength)
-            print "    ...excerpt from %s to %s (duration %s)" % (jumpcity.seconds2hhmmss(trimstart), jumpcity.seconds2hhmmss(trimstart + trimlength), jumpcity.seconds2hhmmss(trimlength))
+            print "    ...excerpt from %s to %s (duration %s)" % (utils.seconds2hhmmss(trimstart), utils.seconds2hhmmss(trimstart + trimlength), utils.seconds2hhmmss(trimlength))
             fade = "fade 0 %d 4" % targetduration
             print "    ...fade: %s" % fade
         # If it is shorter than the target duration, repeat it.
@@ -59,7 +59,7 @@ def generate(mp3=True, play=False):
         layerfn = "layer%d.wav" % nr
         cmd = 'sox "%s" "%s" channels 2 rate 44100 %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
         os.system(cmd)    
-        print "    ...resulting duration: %s" % jumpcity.seconds2hhmmss(jumpcity.soundfileduration(layerfn))
+        print "    ...resulting duration: %s" % utils.seconds2hhmmss(utils.soundfileduration(layerfn))
         mixercmd += '"%s" ' % layerfn
 
     trackname = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")

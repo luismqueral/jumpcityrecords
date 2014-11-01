@@ -3,7 +3,7 @@ import codecs
 import random
 import sys
 sys.path.append("..")
-import jumpcity
+import utils
 
 titles = marshal.load(open("titles.dat", "rb"))
 
@@ -21,7 +21,7 @@ non_english_titles = list(non_english_titles)
 
 def generatetrack():
     duration = int(random.uniform(15, 60 * 15))
-    if jumpcity.rnd(100) < 80:
+    if utils.rnd(100) < 80:
         name = random.choice(english_titles)
     else:
         name = random.choice(non_english_titles)
@@ -29,7 +29,7 @@ def generatetrack():
 
 
 def generatealbum():
-    title = jumpcity.randomname()
+    title = utils.randomname()
     trackcount = int(random.uniform(3, 24))
     seen = set() 
     tracks = []
