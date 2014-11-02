@@ -1,0 +1,12 @@
+
+*.pyc
+*.tmproj
+
+_albums/*
+_assets-disabled/
+_assets/*
+audio/*
+fonts/
+
+track-*
+*.wav
