@@ -5,6 +5,7 @@ import random
 import glob
 import utils
 import datetime
+import constants
 
 """ Create a track from random assets. Software by Michiel Overtoom, motoom@xs4all.nl
 
@@ -17,13 +18,11 @@ Return the name of the generated track.
 TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different bitrates.
 """
 
-MINDUR = 15 # Minumum duration of mix.
-#MAXDUR = 15 * 60 # Maximum duration of mix.
-MAXDUR = 30 # TEST
 
-def generate(mp3=True, play=False):
+def generate(targetduration=None, mp3=True, play=False):
     """ Generate one album track. """
-    targetduration = int(random.uniform(MINDUR, MAXDUR))
+    if targetduration is None:
+        targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
 
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
     print "Creating a track from '%s' asset, target duration %s" % (asset, utils.seconds2hhmmss(targetduration))

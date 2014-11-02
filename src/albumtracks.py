@@ -4,6 +4,8 @@ import random
 import sys
 sys.path.append("..")
 import utils
+import constants
+
 
 class AlbumTracks(object):
     def __init__(self):
@@ -22,7 +24,7 @@ class AlbumTracks(object):
 
 
     def generatetrack(self):
-        duration = int(random.uniform(15, 60 * 15))
+        duration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR + 1))
         if utils.rnd(100) < 80:
             name = random.choice(self.english_titles)
         else:
@@ -32,7 +34,7 @@ class AlbumTracks(object):
 
     def generatealbum(self):
         title = utils.randomname()
-        trackcount = int(random.uniform(3, 24))
+        trackcount = int(random.uniform(constants.MINTRACKSPERALBUM, constants.MAXTRACKSPERALBUM + 1))
         seen = set()
         tracks = []
         while len(tracks) < trackcount:
