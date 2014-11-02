@@ -15,9 +15,12 @@ def randomname():
     return "".join(random.choice(allowed) for i in xrange(8))
 
 
-def rnd(v):
+def rnd(v, w=None):
     "Convenience helper for random numbers."
-    return random.uniform(0, v) 
+    if w is None:
+        return random.uniform(0, v) 
+    else:
+        return random.uniform(v, w)
 
 
 def hhmmss2seconds(x):

@@ -6,6 +6,7 @@ Using Cairo to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
 import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
+import colorspace
 import utils
 from utils import rnd
 import rotate
@@ -18,8 +19,15 @@ def randomcolor(transfrom=None, transto=None):
     if transfrom is None:
         return rnd(1), rnd(1), rnd(1)
     else:
-        return rnd(1), rnd(1), rnd(1), random.uniform(transfrom, transto)
+        return rnd(1), rnd(1), rnd(1), rnd(transfrom, transto)
 
+
+def randompastelcolor():
+    hue = rnd(360)
+    lightness = rnd(0.8, 0.9)
+    saturation = rnd(0.5, 1)
+    return colorspace.hsl2rgb1(hue, saturation, lightness)
+    
 
 def randomrectangle_candidate(w, h):
     center = Point(rnd(w), rnd(h))
@@ -72,7 +80,7 @@ def render(cr, w, h, albumtitle=None):
     cr.set_line_width(0)
     if w > 100 and h > 100: # Refuse to draw in too small a space.
         for i in xrange(2): # Draw two rectangles.
-            cr.set_source_rgba(*randomcolor(0.65, 0.8))
+            cr.set_source_rgb(*randompastelcolor())
             r = randomrectangle(w, splith)
             drawrectangle(cr, r)
             cr.fill()
