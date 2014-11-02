@@ -86,7 +86,10 @@ def generate(targetduration=None, albumname=None, trackname=None, mp3=True, play
             id3tags += ' --tl "%s"' % albumname
         if trackname:
             id3tags += ' --tt "%s"' % trackname
-        os.system("lame %s %s" % (id3tags, trackfilename))
+        res = os.system("lame %s %s" % (id3tags, trackfilename))
+        if res != 0:
+            print "LAME error %d" % res
+            return None
         os.unlink(trackfilename)
         trackfilename = trackfilename.replace(".wav", ".mp3")
         
