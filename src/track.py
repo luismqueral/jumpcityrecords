@@ -58,7 +58,7 @@ def generate(mp3=True, play=False):
             )
         layerfn = "layer%d.wav" % nr
         cmd = 'sox "%s" "%s" channels 2 rate 44100 %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
-        _, errors = utils.execute(cmd)
+        _, errors = utils.soxexecute(cmd)
         if errors:
             raise ValueError("generate() can't create layer '%s': %s" % (layerfn, errors))   
         result, layerdur, errors = utils.soundfileduration(layerfn)
@@ -70,7 +70,7 @@ def generate(mp3=True, play=False):
     trackname = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
     mixercmd += trackname
     print "Mixing to %s..." % trackname, 
-    _, errors = utils.execute(mixercmd)
+    _, errors = utils.soxexecute(mixercmd)
     if errors:
         raise ValueError("generate() can't mix: %s" % (filename, errors))   
     print "done"

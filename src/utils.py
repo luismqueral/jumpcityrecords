@@ -46,8 +46,23 @@ def execute(cmd):
     """ Execute a command and return its standard output and standard error. """
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     return p.communicate()
+
+
+def soxexecute(cmd):
+    """ Execute a SoX command and analyze the error output. Separate the warnings from the errors. """
+    output, errors = execute(cmd)
+    warnings = []
+    realerrors = []
+    for line in errors.splitlines():
+        if line.startswith("sox FAIL"):
+            realerrors.append(line)
+        else:
+            warnings.append(line)
+    if warnings:
+        print "SUPPRESSED WARNINGS:", warnings
+    return output, "\n".join(realerrors)
     
-    
+
 def soundfileduration(fn):
     """ Use soxi to determine the duration of a sound file, in seconds.
         Return a tuple of (succescode, duration, errormessage). """
