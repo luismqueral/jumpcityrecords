@@ -5,12 +5,13 @@ jumpcity.py
 Main driver. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
-# import albumart
+import albumart
 import albumtracks
 import composetrack
 import utils
 import os
 import codecs
+
 
 def generatealbum():
     """ Generate a complete album. """
@@ -23,9 +24,11 @@ def generatealbum():
         break
     print "\nMaking new album '%s'" % albumname
     os.mkdir(albumdir)
-    maxtracknamelen = max(len(track[0]) for track in tracks)
+
+    albumart.rendertopng(albumname, albumdir)
     
     readme = []
+    maxtracknamelen = max(len(track[0]) for track in tracks)
     for nr, track in enumerate(tracks):
         trackname, duration = track
         # Catch exception and re-generate track in case of error.
@@ -38,6 +41,7 @@ def generatealbum():
         # TODO: What about problematic characters in filenames, eg. ?, /, \, :
         # TODO: Output format configurable (MP3, FLAC, etc)
         destname = u"%02d %s - %s.mp3" % (nr + 1, albumname, trackname)
+        print "DESTNAME:", destname
         os.rename(trackfilename, os.path.join(albumdir, destname))
         # An entry in the readme.
         minutes = int(duration / 60)

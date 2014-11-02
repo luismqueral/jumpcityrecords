@@ -13,6 +13,7 @@ import rotate
 from rotate import Rectangle, Point
 import random
 import os
+import constants
 
 
 def randomcolor(transfrom=None, transto=None):
@@ -91,7 +92,6 @@ def render(cr, w, h, albumtitle=None):
     albumtitle_baseline = h * 0.897
     albumtitle_left = w * 0.0275
     cr.move_to(albumtitle_left, albumtitle_baseline)
-    albumtitle = "x79k2bl"
     if not albumtitle:
         albumtitle = utils.randomname()
     cr.show_text(albumtitle)
@@ -113,6 +113,15 @@ def render(cr, w, h, albumtitle=None):
     cr.stroke()
 
 
+def rendertopng(albumtitle, albumdir):
+    w = h = constants.ALBUMARTSIZE
+    ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+    cr = cairo.Context(ims)
+    render(cr, w, h, albumtitle)
+    filename = albumtitle + ".png"
+    ims.write_to_png(os.path.join(albumdir, filename))
+
+            
 if __name__ == "__main__":
     # Generate some example images, store them in the 'output' subdirectory.
     if not os.path.exists("output"):
