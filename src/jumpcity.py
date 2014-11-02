@@ -31,7 +31,7 @@ def generatealbum():
         # Catch exception and re-generate track in case of error.
         while True:
             try:
-                trackfilename = composetrack.generate(duration, mp3=True)
+                trackfilename = composetrack.generate(duration, albumname, trackname, mp3=True)
             except ValueError:
                 continue
             break

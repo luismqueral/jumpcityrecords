@@ -19,7 +19,7 @@ TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different b
 """
 
 
-def generate(targetduration=None, mp3=True, play=False):
+def generate(targetduration=None, albumname=None, trackname=None, mp3=True, play=False):
     """ Generate one album track. """
     if targetduration is None:
         targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
@@ -66,26 +66,31 @@ def generate(targetduration=None, mp3=True, play=False):
         print "    ...resulting duration: %s" % utils.seconds2hhmmss(layerdur)
         mixercmd += '"%s" ' % layerfn
 
-    trackname = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
-    mixercmd += trackname
-    print "Mixing to %s..." % trackname, 
+    trackfilename = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
+    mixercmd += trackfilename
+    print "Mixing to %s..." % trackfilename, 
     _, errors = utils.soxexecute(mixercmd)
     if errors:
-        raise ValueError("generate() can't mix: %s" % (filename, errors))   
+        raise ValueError("generate() can't mix: %s" % (trackfilename, errors))   
     print "done"
 
     os.system("rm layer*.wav") # Remove tempfiles.
 
     if play:
-        os.system("play -q %s" % trackname)
+        os.system("play -q %s" % trackfilename)
 
     if mp3:
         print "Making mp3..."
-        os.system("lame %s" % trackname)
-        os.unlink(trackname)
-        trackname = trackname.replace(".wav", ".mp3")
+        id3tags = ' --ta "Jumpcity Records" --ty %04d' % datetime.date.today().year
+        if albumname:
+            id3tags += ' --tl "%s"' % albumname
+        if trackname:
+            id3tags += ' --tt "%s"' % trackname
+        os.system("lame %s %s" % (id3tags, trackfilename))
+        os.unlink(trackfilename)
+        trackfilename = trackfilename.replace(".wav", ".mp3")
         
-    return trackname
+    return trackfilename
     
     
 
