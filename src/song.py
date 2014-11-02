@@ -45,9 +45,9 @@ FGPARTS = 4 # Nr. of foreground excerpts in the foreground track.
 class Track(object):
     def __init__(self, filename, mindur, maxdur, fadedur=CROSSFADE):
         self.filename = filename
-        self.duration = utils.soundfileduration(filename)
-        if not self.duration:
-            raise ValueError("Soxi can't determine the duration of '%s'" % filename)
+        success, self.duration, errors = utils.soundfileduration(filename)
+        if not success:
+            raise ValueError("Soxi can't determine the duration of '%s': %s" % (filename, errors))
         self.length = int(random.uniform(mindur, maxdur)) # Choose a fragment
         self.start = int(random.uniform(0, self.duration - self.length - fadedur * 2)) # Let it come from anywhere in the source file.
         

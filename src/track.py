@@ -12,19 +12,17 @@ import datetime
 - Choose three random files in this subdirectory.
 - Mix them.
 
-TODO: Error handling
-TODO: use suprocess to execute SoX and also capture stderr to detect 'FAIL' error conditions like: 
-  sox FAIL sox: Input files must have the same sample-rate
-  sox FAIL remix: too few input channels
-  soxi FAIL formats: can't open input file `brumbrum.wav': No such file or directory
+Return the name of the generated track.
+
 TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different bitrates.
 """
 
 MINDUR = 15 # Minumum duration of mix.
-MAXDUR = 15 * 60 # Maximum duration of mix.
-
+#MAXDUR = 15 * 60 # Maximum duration of mix.
+MAXDUR = 30 # TEST
 
 def generate(mp3=True, play=False):
+    """ Generate one album track. """
     targetduration = int(random.uniform(MINDUR, MAXDUR))
 
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
@@ -34,7 +32,9 @@ def generate(mp3=True, play=False):
     mixercmd = "sox -m "
     for nr, fn in enumerate(random.sample(fns, 3)):
         # See how long the sample is.
-        fndur = utils.soundfileduration(fn)
+        success, fndur, errors = utils.soundfileduration(fn)
+        if not success:
+            raise ValueError("generate() can't determine the duration of '%s': %s" % (filename, errors))
         print "    Source for layer%d: %s (duration %s)" % (nr, fn, utils.seconds2hhmmss(fndur))
         # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
         fade = trim = ""
@@ -58,14 +58,21 @@ def generate(mp3=True, play=False):
             )
         layerfn = "layer%d.wav" % nr
         cmd = 'sox "%s" "%s" channels 2 rate 44100 %s %s %s %s' % (fn, layerfn, panning[nr], repeat, trim, fade)
-        os.system(cmd)    
-        print "    ...resulting duration: %s" % utils.seconds2hhmmss(utils.soundfileduration(layerfn))
+        _, errors = utils.execute(cmd)
+        if errors:
+            raise ValueError("generate() can't create layer '%s': %s" % (layerfn, errors))   
+        result, layerdur, errors = utils.soundfileduration(layerfn)
+        if errors:
+            raise ValueError("generate() can't determine duration of '%s': %s" % (layerfn, errors))   
+        print "    ...resulting duration: %s" % utils.seconds2hhmmss(layerdur)
         mixercmd += '"%s" ' % layerfn
 
     trackname = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
     mixercmd += trackname
     print "Mixing to %s..." % trackname, 
-    os.system(mixercmd)
+    _, errors = utils.execute(mixercmd)
+    if errors:
+        raise ValueError("generate() can't mix: %s" % (filename, errors))   
     print "done"
 
     os.system("rm layer*.wav") # Remove tempfiles.
@@ -77,7 +84,11 @@ def generate(mp3=True, play=False):
         print "Making mp3..."
         os.system("lame %s" % trackname)
         os.unlink(trackname)
-
+        trackname = trackname.replace(".wav", ".mp3")
+        
+    return trackname
+    
+    
 
 if __name__ == "__main__":
     for i in xrange(20):
