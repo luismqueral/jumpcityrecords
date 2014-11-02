@@ -1,0 +1,5 @@
+
+Installing the needed software stack on Ubuntu 14.04 LTS:
+
+sudo apt-get install git idle python-cairo lame sox libsox-fmt-all libav-tools
+
