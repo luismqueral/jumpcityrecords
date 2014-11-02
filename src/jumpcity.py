@@ -6,8 +6,13 @@ Main driver. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
 import albumart
+import albumtracks
 import track
-#import title
 
+def generatealbum():
+    """ Generate a complete album. """
+    pass # TODO
+    
 if __name__ == "__main__":
-    pass
+    for i in xrange(5):
+        name = generatealbum()

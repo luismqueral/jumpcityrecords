@@ -6,7 +6,7 @@ Load the titles that 'parse.py' saved, and produces a report.
 import marshal
 import codecs
 
-titles = marshal.load(open("titles.dat", "rb"))
+titles = marshal.load(open("../titles.dat", "rb"))
 
 textreport = False
 htmlreport = True

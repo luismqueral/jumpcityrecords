@@ -50,4 +50,4 @@ for fn in glob.glob("pagecounts-????????-??????"):
 if errors:
     print "%s titles extracted; %d utf8 decoding errors" % (successes, errors)
     
-marshal.dump(dict(titles), open("titles.dat", "wb"), 2)
+marshal.dump(dict(titles), open("../titles.dat", "wb"), 2)
