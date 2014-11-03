@@ -5,7 +5,12 @@ albumart.py
 Using Cairo to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
-import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
+try:
+    import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
+    have_cairo = True
+except ImportError:
+    from PIL import Image, ImageColor, ImageFont, ImageDraw # On OSX: sudo pip install pillow
+    have_cairo = False
 import colorspace
 import utils
 from utils import rnd
@@ -67,82 +72,118 @@ def drawrectangle(cr, r):
     
 
 def render(cr, w, h, albumtitle=None):
-    splith = h * 0.8
-    # Start with white background.
-    cr.set_source_rgb(1, 1, 1) # White.
-    cr.rectangle(0, 0, w, h)
-    cr.fill()
-    # Colored upper pane (backdrop for rectangles).
-    # IDEA: use H,S,L color model with constraints on all components.
-    cr.set_source_rgba(*randomcolor(0.8, 0.9))
-    cr.rectangle(0, 0, w, splith)
-    cr.fill()
-    # Figure.
-    cr.set_line_width(0)
-    if w > 100 and h > 100: # Refuse to draw in too small a space.
-        for i in xrange(2): # Draw two rectangles.
-            cr.set_source_rgb(*randompastelcolor())
-            r = randomrectangle(w, splith)
-            drawrectangle(cr, r)
-            cr.fill()
-    # Album title.
-    cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
-    cr.select_font_face("Transport Medium", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(h * 0.064)
-    albumtitle_baseline = h * 0.897
-    albumtitle_left = w * 0.0275
-    cr.move_to(albumtitle_left, albumtitle_baseline)
-    if not albumtitle:
-        albumtitle = utils.randomname()
-    cr.show_text(albumtitle)
-    # Recordlabel name.
-    cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
-    cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(h * 0.027)
-    recordlabelname_baseline = h * 0.95
-    cr.move_to(albumtitle_left, recordlabelname_baseline)
-    cr.show_text("jump city records")
-    # Release number.
-    releasenumber_left = w * 0.897
-    cr.move_to(releasenumber_left, recordlabelname_baseline)
-    cr.show_text("%04d" % int(random.uniform(0, 10000)))
-    # Outline.
-    cr.rectangle(0, 0, w, h)
-    cr.set_source_rgb(0.85, 0.85, 0.85) # Light gray.
-    cr.set_line_width(1)
-    cr.stroke()
+    if have_cairo:
+        splith = h * 0.8
+        # Start with white background.
+        cr.set_source_rgb(1, 1, 1) # White.
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+        # Colored upper pane (backdrop for rectangles).
+        cr.set_source_rgba(*randomcolor(0.8, 0.9))
+        cr.rectangle(0, 0, w, splith)
+        cr.fill()
+        # Figure.
+        cr.set_line_width(0)
+        if w > 100 and h > 100: # Refuse to draw in too small a space.
+            for i in xrange(2): # Draw two rectangles.
+                cr.set_source_rgb(*randompastelcolor())
+                r = randomrectangle(w, splith)
+                drawrectangle(cr, r)
+                cr.fill()
+        # Album title.
+        cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
+        cr.select_font_face("Transport Medium", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(h * 0.064)
+        albumtitle_baseline = h * 0.897
+        albumtitle_left = w * 0.0275
+        cr.move_to(albumtitle_left, albumtitle_baseline)
+        if not albumtitle:
+            albumtitle = utils.randomname()
+        cr.show_text(albumtitle)
+        # Recordlabel name.
+        cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
+        cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(h * 0.027)
+        recordlabelname_baseline = h * 0.95
+        cr.move_to(albumtitle_left, recordlabelname_baseline)
+        cr.show_text("jump city records")
+        # Release number.
+        releasenumber_left = w * 0.897
+        cr.move_to(releasenumber_left, recordlabelname_baseline)
+        cr.show_text("%04d" % int(random.uniform(0, 10000)))
+        # Outline.
+        cr.rectangle(0, 0, w, h)
+        cr.set_source_rgb(0.85, 0.85, 0.85) # Light gray.
+        cr.set_line_width(1)
+        cr.stroke()
+    else:
+        splith = h * 0.8
+        # Colored, transparent upper pane.
+        draw = ImageDraw.Draw(cr, "RGBA")
+        color = tuple([int(val * 255) for val in randomcolor(0.8, 0.9)])
+        draw.rectangle((0, 0, w, splith), color)
+        #
+        draw = ImageDraw.Draw(cr, "RGB")
+        # Figure.
+        if w > 100 and h > 100:
+            for i in xrange(2):
+                color = tuple([int(val * 255) for val in randompastelcolor()])
+                r = randomrectangle(w, splith)
+                draw.polygon(r, color)
+        # Album title.
+        color = (30, 30, 30) # Almost black.
+        fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.064))
+        albumtitle_baseline = h * 0.84
+        albumtitle_left = w * 0.0275
+        if not albumtitle:
+            albumtitle = utils.randomname()
+        draw.text((albumtitle_left, albumtitle_baseline), albumtitle, font=fnt, fill=color)
+        # Recordlabel name.
+        color = (128, 128, 128)
+        fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.027))
+        recordlabelname_baseline = h * 0.93
+        draw.text((albumtitle_left, recordlabelname_baseline), "jump city records", font=fnt, fill=color)
+        # Release number.
+        releasenumber_left = w * 0.897
+        txt = "%04d" % int(random.uniform(0, 10000))
+        draw.text((releasenumber_left, recordlabelname_baseline), txt, font=fnt, fill=color)
+        # Outline.
+        color = (216, 216, 216)
+        draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
 
 
 def rendertopng(albumtitle, albumdir):
     w = h = constants.ALBUMARTSIZE
-    ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-    cr = cairo.Context(ims)
-    render(cr, w, h, albumtitle)
-    filename = albumtitle + ".png"
-    ims.write_to_png(os.path.join(albumdir, filename))
-
+    filename = os.path.join(albumdir, albumtitle + ".png")
+    if have_cairo:
+        ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(ims)
+        render(cr, w, h, albumtitle)
+        ims.write_to_png(filename)
+    else:
+        cr = Image.new("RGB", (w * 2, h * 2), "#fff")
+        render(cr, w * 2, h * 2, albumtitle)
+        cr.thumbnail((w, h), Image.ANTIALIAS)
+        cr.save(filename)
+        
             
 if __name__ == "__main__":
     # Generate some example images, store them in the 'output' subdirectory.
     if not os.path.exists("output"):
         os.mkdir("output")
     if 1:
-        print "Generating 100 album art pictures in ./output directory:"
-        for i in xrange(100):
+        print "Generating album art pictures in ./output directory:"
+        for i in xrange(20):
             w, h = 725, 725
-            ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-            cr = cairo.Context(ims)
             albumtitle = utils.randomname()
-            render(cr, w, h, albumtitle)
-            filename = albumtitle + ".png"
-            ims.write_to_png(os.path.join("output", filename))
-    if 1:
-        print "Generating differently sized album art pictures in ./output directory:"
-        for i in xrange(200, 1400, 50):
-            w, h = i, i
-            ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-            cr = cairo.Context(ims)
-            albumtitle = utils.randomname()
-            render(cr, w, h, albumtitle)
-            filename = "%04d.png" % i
-            ims.write_to_png(os.path.join("output", filename))
+            filename = os.path.join("output", albumtitle + ".png")
+            if have_cairo:
+                ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+                cr = cairo.Context(ims)
+                render(cr, w, h, albumtitle)     
+                ims.write_to_png(filename)
+            else:
+                cr = Image.new("RGB", (w * 2, h * 2), "#fff")
+                render(cr, w * 2, h * 2, albumtitle)
+                cr.thumbnail((w, h), Image.ANTIALIAS)
+                cr.save(filename)
