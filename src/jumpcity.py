@@ -25,7 +25,7 @@ def generatealbum():
     print "\nMaking new album '%s'" % albumname
     os.mkdir(albumdir)
 
-    albumart.rendertopng(albumname, albumdir)
+    picturefilename = albumart.rendertopng(albumname, albumdir)
     
     readme = []
     maxtracknamelen = max(len(track[0]) for track in tracks)
@@ -34,7 +34,7 @@ def generatealbum():
         # Catch exception and re-generate track in case of error.
         while True:
             try:
-                trackfilename = composetrack.generate(duration, albumname, trackname)
+                trackfilename = composetrack.generate(duration, albumname, trackname, picturefilename)
             except ValueError:
                 continue
             break

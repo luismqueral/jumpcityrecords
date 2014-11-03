@@ -19,7 +19,7 @@ TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different b
 """
 
 
-def generate(targetduration=None, albumname=None, trackname=None, play=False):
+def generate(targetduration=None, albumname=None, trackname=None, picturefilename=None, play=False):
     """ Generate one album track. """
     if targetduration is None:
         targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
@@ -92,6 +92,18 @@ def generate(targetduration=None, albumname=None, trackname=None, play=False):
             return None
         os.unlink(trackfilename)
         trackfilename = trackfilename.replace(".wav", ".mp3")
+    elif constants.OUTPUTFORMAT == "flac":
+        print "Making flac..."
+        pictureclause = ""
+        if picturefilename:
+            pictureclause = '--picture="%s" ' % picturefilename
+        cmd = 'flac -s -f -8 --delete-input-file %s "%s"' % (pictureclause, trackfilename)
+        print "SYSTEM:", cmd
+        res = os.system(cmd)
+        if res != 0:
+            print "flac error %d" % res
+            return None
+        trackfilename = trackfilename.replace(".wav", ".flac")
     else:
         raise Exception("Unrecognized output format '%s'" % constants.OUTPUTFORMAT)
     return trackfilename

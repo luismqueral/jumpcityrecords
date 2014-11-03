@@ -166,7 +166,8 @@ def rendertopng(albumtitle, albumdir):
         render(cr, w * 2, h * 2, albumtitle)
         cr.thumbnail((w, h), Image.ANTIALIAS)
         cr.save(filename)
-        
+    return filename
+    
             
 if __name__ == "__main__":
     # Generate some example images, store them in the 'output' subdirectory.
