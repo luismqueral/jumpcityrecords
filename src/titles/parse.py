@@ -41,8 +41,10 @@ for fn in glob.glob("pagecounts-????????-??????"):
             continue # No titles that start with a dot or a percent sign.
         if ":" in rest:
             continue # No special pages.
-        if "\\" in rest:
-            continue # Distrust titles with backslashes in them.
+        if "\\" in rest or "//" in rest:
+            continue # Distrust titles with backslashes in them, and don't allow slashes because linux doesn't like that in filenames.
+        if "?" in rest or "*" in rest:
+            continue # Wildcards in filenames is also a bad idea.
         title, _, _ = rest.rsplit(" ", 2)
         titles[project].add(title)
         successes += 1
