@@ -1,13 +1,9 @@
 # -*- coding: utf8 -*-
 
-import os
-import random
-import glob
-import utils
-import datetime
-import constants
+"""
+composetrack.py
 
-""" Create a track from random assets. Software by Michiel Overtoom, motoom@xs4all.nl
+Create a track from random assets. Software by Michiel Overtoom, motoom@xs4all.nl
 
 - Choose a random directory from the _assets subdirectory.
 - Choose three random files in this subdirectory.
@@ -18,8 +14,15 @@ Return the name of the generated track.
 TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different bitrates.
 """
 
+import os
+import random
+import glob
+import utils
+import datetime
+import constants
 
-def generate(targetduration=None, albumname=None, trackname=None, picturefilename=None, play=False):
+
+def generate(targetduration=None, albumname=None, trackname=None, picturefilename=None, tags=None, play=False):
     """ Generate one album track. """
     if targetduration is None:
         targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
@@ -94,12 +97,18 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         trackfilename = trackfilename.replace(".wav", ".mp3")
     elif constants.OUTPUTFORMAT == "flac":
         print "Making flac..."
-        pictureclause = ""
+        pictureclause = u""
         if picturefilename:
-            pictureclause = '--picture="%s" ' % picturefilename
-        cmd = 'flac -s -f -8 --delete-input-file %s "%s"' % (pictureclause, trackfilename)
-        print "SYSTEM:", cmd
-        res = os.system(cmd)
+            pictureclause = u'--picture="%s" ' % picturefilename
+        tagclause = u""
+        if tags:
+            for field, value in tags.iteritems():
+                if field == "DESCRIPTION":
+                    tagclause += u"--tag-from-file=%s=%s " % (field, value)
+                else:
+                    tagclause += u'--tag=%s="%s" ' % (field, value)                    
+        cmd = u'flac -s -f -8 --delete-input-file %s %s "%s"' % (pictureclause, tagclause, trackfilename)
+        res = os.system(cmd.encode("utf8"))
         if res != 0:
             print "flac error %d" % res
             return None

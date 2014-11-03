@@ -72,8 +72,9 @@ def drawrectangle(cr, r):
     cr.fill()
     
 
-def render(cr, w, h, albumtitle=None):
-    datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
+def render(cr, w, h, albumtitle=None, datestamp=None):
+    if datestamp is None:
+        datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
     if have_cairo:
         splith = h * 0.8
         # Start with white background.
@@ -153,17 +154,17 @@ def render(cr, w, h, albumtitle=None):
         draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
 
 
-def rendertopng(albumtitle, albumdir):
+def rendertopng(albumtitle, datestamp, albumdir):
     w = h = constants.ALBUMARTSIZE
     filename = os.path.join(albumdir, albumtitle + ".png")
     if have_cairo:
         ims = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         cr = cairo.Context(ims)
-        render(cr, w, h, albumtitle)
+        render(cr, w, h, albumtitle, datestamp)
         ims.write_to_png(filename)
     else:
         cr = Image.new("RGB", (w * 2, h * 2), "#fff")
-        render(cr, w * 2, h * 2, albumtitle)
+        render(cr, w * 2, h * 2, albumtitle, datestamp)
         cr.thumbnail((w, h), Image.ANTIALIAS)
         cr.save(filename)
     return filename

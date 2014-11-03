@@ -1,3 +1,11 @@
+# -*- coding: utf8 -*-
+
+"""
+albumtracks.py
+
+Generate meta-data (name, tracknames, durations etc...) for an album. Software by Michiel Overtoom, motoom@xs4all.nl
+"""
+
 import marshal
 import codecs
 import random
@@ -5,6 +13,7 @@ import sys
 sys.path.append("..")
 import utils
 import constants
+import datetime
 
 
 class AlbumTracks(object):
@@ -34,6 +43,7 @@ class AlbumTracks(object):
 
     def generatealbum(self):
         title = utils.randomname()
+        datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
         trackcount = int(random.uniform(constants.MINTRACKSPERALBUM, constants.MAXTRACKSPERALBUM + 1))
         seen = set()
         tracks = []
@@ -43,7 +53,7 @@ class AlbumTracks(object):
             if name not in seen: # Avoid duplicate track names.
                 tracks.append(candidate)
                 seen.add(name)
-        return title, tracks
+        return title, datestamp, tracks
 
 
     def htmlexample(self):
@@ -71,7 +81,7 @@ class AlbumTracks(object):
                 </head>
                 <body><div>\n""");
             for i in xrange(100):
-                albumname, tracks = self.generatealbum()    
+                albumname, datestamp, tracks = self.generatealbum()    
                 of.write(u"<h1>%s</h1>\n" % albumname)
                 of.write(u"<table>\n")
                 for track in tracks:
