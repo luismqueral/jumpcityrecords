@@ -1,5 +1,9 @@
 
 Installing the needed software stack on Ubuntu 14.04 LTS:
 
-sudo apt-get install git idle python-cairo lame sox libsox-fmt-all libav-tools
+sudo apt-get install git python-cairo lame sox libsox-fmt-all libav-tools flac
+
+Not necessary, but handy:
+
+sudo apt-get install openssh-server idle
 
