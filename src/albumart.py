@@ -2,9 +2,12 @@
 """
 albumart.py
 
-Using Cairo to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
+Using Cairo or PIL to draw album art. Software by Michiel Overtoom, motoom@xs4all.nl
 """
 
+import os
+import datetime
+import random
 try:
     import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
     have_cairo = True
@@ -16,8 +19,6 @@ import utils
 from utils import rnd
 import rotate
 from rotate import Rectangle, Point
-import random
-import os
 import constants
 
 
@@ -72,6 +73,7 @@ def drawrectangle(cr, r):
     
 
 def render(cr, w, h, albumtitle=None):
+    datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
     if have_cairo:
         splith = h * 0.8
         # Start with white background.
@@ -107,9 +109,9 @@ def render(cr, w, h, albumtitle=None):
         recordlabelname_baseline = h * 0.95
         cr.move_to(albumtitle_left, recordlabelname_baseline)
         cr.show_text("jump city records")
-        # Release number.
-        releasenumber_left = w * 0.897
-        cr.move_to(releasenumber_left, recordlabelname_baseline)
+        # Release date.
+        releasedate_left = w * 0.7
+        cr.move_to(releasedate_left, recordlabelname_baseline)
         cr.show_text("%04d" % int(random.uniform(0, 10000)))
         # Outline.
         cr.rectangle(0, 0, w, h)
@@ -143,10 +145,9 @@ def render(cr, w, h, albumtitle=None):
         fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.027))
         recordlabelname_baseline = h * 0.93
         draw.text((albumtitle_left, recordlabelname_baseline), "jump city records", font=fnt, fill=color)
-        # Release number.
-        releasenumber_left = w * 0.897
-        txt = "%04d" % int(random.uniform(0, 10000))
-        draw.text((releasenumber_left, recordlabelname_baseline), txt, font=fnt, fill=color)
+        # Release date.
+        releasedate_left = w * 0.7
+        draw.text((releasedate_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
         # Outline.
         color = (216, 216, 216)
         draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
