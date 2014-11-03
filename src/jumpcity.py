@@ -11,7 +11,7 @@ import composetrack
 import utils
 import os
 import codecs
-
+import constants
 
 def generatealbum():
     """ Generate a complete album. """
@@ -34,13 +34,12 @@ def generatealbum():
         # Catch exception and re-generate track in case of error.
         while True:
             try:
-                trackfilename = composetrack.generate(duration, albumname, trackname, mp3=True)
+                trackfilename = composetrack.generate(duration, albumname, trackname)
             except ValueError:
                 continue
             break
         # TODO: What about problematic characters in filenames, eg. ?, /, \, :
-        # TODO: Output format configurable (MP3, FLAC, etc)
-        destname = u"%02d %s - %s.mp3" % (nr + 1, albumname, trackname)
+        destname = u"%02d %s - %s.%s" % (nr + 1, albumname, trackname, constants.OUTPUTFORMAT)
         print "DESTNAME:", destname
         os.rename(trackfilename, os.path.join(albumdir, destname))
         # An entry in the readme.

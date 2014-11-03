@@ -19,7 +19,7 @@ TODO: determine (and correct) bitrate. SoX won't mix soundfiles with different b
 """
 
 
-def generate(targetduration=None, albumname=None, trackname=None, mp3=True, play=False):
+def generate(targetduration=None, albumname=None, trackname=None, play=False):
     """ Generate one album track. """
     if targetduration is None:
         targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
@@ -79,7 +79,7 @@ def generate(targetduration=None, albumname=None, trackname=None, mp3=True, play
     if play:
         os.system("play -q %s" % trackfilename)
 
-    if mp3:
+    if constants.OUTPUTFORMAT == "mp3":
         print "Making mp3..."
         id3tags = ' --ta "Jumpcity Records" --ty %04d' % datetime.date.today().year
         if albumname:
@@ -92,7 +92,8 @@ def generate(targetduration=None, albumname=None, trackname=None, mp3=True, play
             return None
         os.unlink(trackfilename)
         trackfilename = trackfilename.replace(".wav", ".mp3")
-        
+    else:
+        raise Exception("Unrecognized output format '%s'" % constants.OUTPUTFORMAT)
     return trackfilename
     
     
