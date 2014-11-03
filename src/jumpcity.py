@@ -82,11 +82,13 @@ def generatealbum():
             break
         # TODO: What about problematic characters in filenames, eg. ?, /, \, :
         destname = u"%02d %s - %s.%s" % (nr + 1, albumname, trackname, constants.OUTPUTFORMAT)
+        print "DESTNAME:", destname
         os.rename(trackfilename, os.path.join(albumdir, destname))
 
     # Clean up
     os.unlink(descriptionfilename)
-
+    print
+    
 
 if __name__ == "__main__":
     for i in xrange(5):

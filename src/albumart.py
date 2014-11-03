@@ -77,7 +77,10 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
     if datestamp is None:
         datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
     if have_cairo:
-        splith = h * 0.8
+        if PHONE:
+            splith = h * 0.7
+        else:
+            splith = h * 0.8        
         # Start with white background.
         cr.set_source_rgb(1, 1, 1) # White.
         cr.rectangle(0, 0, w, h)
@@ -97,9 +100,14 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         # Album title.
         cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
         cr.select_font_face("Transport Medium", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        cr.set_font_size(h * 0.064)
-        albumtitle_baseline = h * 0.897
-        albumtitle_left = w * 0.0275
+        if PHONE:
+            cr.set_font_size(h * 0.09)
+            albumtitle_baseline = h * 0.82
+            albumtitle_left = w * 0.0275
+        else:
+            cr.set_font_size(h * 0.064)
+            albumtitle_baseline = h * 0.897
+            albumtitle_left = w * 0.0275
         cr.move_to(albumtitle_left, albumtitle_baseline)
         if not albumtitle:
             albumtitle = utils.randomname()
@@ -107,13 +115,24 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         # Recordlabel name.
         cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
         cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        cr.set_font_size(h * 0.027)
-        recordlabelname_baseline = h * 0.95
+        if PHONE:
+            cr.set_font_size(h * 0.0849)
+            recordlabelname_baseline = h * 0.95
+        else:
+            cr.set_font_size(h * 0.027)
+            recordlabelname_baseline = h * 0.95
         cr.move_to(albumtitle_left, recordlabelname_baseline)
         cr.show_text("jump city records")
         # Release date.
-        releasedate_left = w * 0.68
-        cr.move_to(releasedate_left, recordlabelname_baseline)
+        if PHONE:
+            cr.set_font_size(h * 0.07)
+            releasedate_baseline = h * 0.82           
+            releasedate_left = w * 0.6
+            datestamp = datestamp[:8]
+        else:
+            releasedate_baseline = recordlabelname_baseline
+            releasedate_left = w * 0.68
+        cr.move_to(releasedate_left, releasedate_baseline)
         cr.show_text(datestamp)
         # Outline.
         cr.rectangle(0, 0, w, h)

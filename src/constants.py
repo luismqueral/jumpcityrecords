@@ -8,7 +8,7 @@ TRACKMINDUR = 15
 TRACKMAXDUR = 15 * 60
 
 # Album artwork size (in pixels).
-ALBUMARTSIZE = 1200
+ALBUMARTSIZE = 256
 
 # Other settings.
 OUTPUTFORMAT = "flac"  # Either "mp3" or "flac".
