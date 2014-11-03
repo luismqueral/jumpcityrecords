@@ -110,9 +110,9 @@ def render(cr, w, h, albumtitle=None):
         cr.move_to(albumtitle_left, recordlabelname_baseline)
         cr.show_text("jump city records")
         # Release date.
-        releasedate_left = w * 0.7
+        releasedate_left = w * 0.68
         cr.move_to(releasedate_left, recordlabelname_baseline)
-        cr.show_text("%04d" % int(random.uniform(0, 10000)))
+        cr.show_text(datestamp)
         # Outline.
         cr.rectangle(0, 0, w, h)
         cr.set_source_rgb(0.85, 0.85, 0.85) # Light gray.
