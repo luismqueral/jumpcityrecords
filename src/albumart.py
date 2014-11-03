@@ -20,6 +20,8 @@ import rotate
 from rotate import Rectangle, Point
 import constants
 
+# Tryout: alternate layout for phone (makes text readable)
+PHONE = True
 
 def randomcolor(transfrom=None, transto=None):
     if transfrom is None:
@@ -119,7 +121,10 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         cr.set_line_width(1)
         cr.stroke()
     else:
-        splith = h * 0.8
+        if PHONE:
+            splith = h * 0.7
+        else:
+            splith = h * 0.8
         # Colored, transparent upper pane.
         draw = ImageDraw.Draw(cr, "RGBA")
         color = tuple([int(val * 255) for val in randomcolor(0.8, 0.9)])
@@ -134,20 +139,35 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 draw.polygon(r, color)
         # Album title.
         color = (30, 30, 30) # Almost black.
-        fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.064))
-        albumtitle_baseline = h * 0.84
-        albumtitle_left = w * 0.0275
+        if PHONE:
+            fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.1))
+            albumtitle_baseline = h * 0.73
+            albumtitle_left = w * 0.0275
+        else:
+            fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.064))
+            albumtitle_baseline = h * 0.84
+            albumtitle_left = w * 0.0275
         if not albumtitle:
             albumtitle = utils.randomname()
         draw.text((albumtitle_left, albumtitle_baseline), albumtitle, font=fnt, fill=color)
         # Recordlabel name.
         color = (128, 128, 128)
-        fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.027))
-        recordlabelname_baseline = h * 0.93
+        if PHONE:
+            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.09))
+            recordlabelname_baseline = h * 0.87
+        else:
+            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.027))
+            recordlabelname_baseline = h * 0.93
         draw.text((albumtitle_left, recordlabelname_baseline), "jump city records", font=fnt, fill=color)
         # Release date.
-        releasedate_left = w * 0.7
-        draw.text((releasedate_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
+        if PHONE:
+            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.075))
+            releasedate_baseline = h * 0.755
+            releasedate_left = w * 0.61
+            draw.text((releasedate_left, releasedate_baseline), datestamp[:8], font=fnt, fill=color)
+        else:
+            releasedate_left = w * 0.7
+            draw.text((releasedate_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
         # Outline.
         color = (216, 216, 216)
         draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
@@ -175,7 +195,7 @@ if __name__ == "__main__":
         os.mkdir("output")
     if 1:
         print "Generating album art pictures in ./output directory:"
-        for i in xrange(20):
+        for i in xrange(1):
             w, h = 725, 725
             albumtitle = utils.randomname()
             filename = os.path.join("output", albumtitle + ".png")
