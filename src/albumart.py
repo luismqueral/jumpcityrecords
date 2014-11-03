@@ -7,12 +7,11 @@ Using Cairo or PIL to draw album art. Software by Michiel Overtoom, motoom@xs4al
 
 import os
 import datetime
-import random
 try:
     import cairo # On Ubuntu: sudo apt-get install python-cairo; On OSX (with homebrew): sudo brew install py2cairo
     have_cairo = True
 except ImportError:
-    from PIL import Image, ImageColor, ImageFont, ImageDraw # On OSX: sudo pip install pillow
+    from PIL import Image, ImageFont, ImageDraw # On OSX: sudo pip install pillow
     have_cairo = False
 import colorspace
 import utils

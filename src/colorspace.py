@@ -4,7 +4,6 @@
 # Software by Michiel Overtoom, motoom@xs4all.nl, november 2010
 # Algorithm taken from http://en.wikipedia.org/wiki/HSL_and_HSV
 
-import math
 import unittest
 
 # Given an HSL color with hue H ∈ [0°, 360°), saturation SHSL ∈ [0, 1], and lightness L ∈ [0, 1],

@@ -36,7 +36,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         # See how long the sample is.
         success, fndur, errors = utils.soundfileduration(fn)
         if not success:
-            raise ValueError("generate() can't determine the duration of '%s': %s" % (filename, errors))
+            raise ValueError("generate() can't determine the duration of '%s': %s" % (fn, errors))
         print "    Source for layer%d: %s (duration %s)" % (nr, fn, utils.seconds2hhmmss(fndur))
         # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
         fade = trim = ""

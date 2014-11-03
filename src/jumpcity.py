@@ -9,7 +9,6 @@ Main driver. Software by Michiel Overtoom, motoom@xs4all.nl
 import albumart
 import albumtracks
 import composetrack
-import utils
 import os
 import codecs
 import constants
@@ -49,8 +48,8 @@ def generatealbum():
         description.append(line)
     description.extend([
         u"",
-        u"░ designed by Luis Queral (http://luisquer.al)",
         u"░ engineered by Michiel Overtoom (http://www.michielovertoom.com/)",
+        u"░ designed by Luis Queral (http://luisquer.al)",
         u"",
         u"view more at: jumpcityrecords.bandcamp.com",
         ])
@@ -83,7 +82,6 @@ def generatealbum():
             break
         # TODO: What about problematic characters in filenames, eg. ?, /, \, :
         destname = u"%02d %s - %s.%s" % (nr + 1, albumname, trackname, constants.OUTPUTFORMAT)
-        print "DESTNAME:", destname
         os.rename(trackfilename, os.path.join(albumdir, destname))
 
     # Clean up
