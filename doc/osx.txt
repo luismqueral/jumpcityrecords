@@ -35,8 +35,16 @@ $ mkdir ~/jumpcityrecords/_albums
 $ mkdir ~/jumpcityrecords/_albums/Samples
 - place at least 5 audio samples (with the audio format mp3, wav, aiff or flac) in the ~/jumpcityrecords/_albums/Samples folder.
 $ python jumpcity.py
-- Done
+- see if it works. Feel free to Control-C after a while.
 
-TODO: Describe installing Gtk3, so that randomdraw.py can be run.
+- install Gtk3+ as follows:
+$ cd ~/jumpcityrecords/src
+$ brew install pygobject3 gtk+3
+$ mkdir -p ~/Library/LaunchAgents
+$ cp /usr/local/Cellar/d-bus/1.8.8/org.freedesktop.dbus-session.plist ~/Library/LaunchAgents/
+$ launchctl load -w ~/Library/LaunchAgents/org.freedesktop.dbus-session.plist
+$ python randomdraw.py  (could take some time, XQuartz has to start too)
+- resize the app window to refresh the album art
 
-TIP: Download http://goo.gl/nKqPvM. Not necessary, but this app will restore Lucida Grande as the system font on Yosemite. If you like the older look of OSX, or, in my case, I have a pretty old iMac and the screen isn't suited well for Helvetica Neue.
+UNRELATED TIP: Download http://goo.gl/nKqPvM
+This app will restore Lucida Grande as the system font on Yosemite. If you like the older look of OSX, or, in my case, I have a pretty old iMac and the screen isn't suited well for Helvetica Neue.
