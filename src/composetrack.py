@@ -84,17 +84,18 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
 
     if constants.OUTPUTFORMAT == "mp3":
         print "Making mp3..."
-        id3tags = ' --ta "Jumpcity Records" --ty %04d' % datetime.date.today().year
+        id3tags = u' --ta "Jumpcity Records" --ty %04d' % datetime.date.today().year
         if albumname:
-            id3tags += ' --tl "%s"' % albumname
+            id3tags += u' --tl "%s"' % albumname
         if trackname:
-            id3tags += ' --tt "%s"' % trackname
-        res = os.system("lame %s %s" % (id3tags, trackfilename))
+            id3tags += u' --tt "%s"' % trackname
+        cmd = u"lame %s %s" % (id3tags, trackfilename)
+        res = os.system(cmd.encode("utf8"))
         if res != 0:
             print "LAME error %d" % res
             return None
         os.unlink(trackfilename)
-        trackfilename = trackfilename.replace(".wav", ".mp3")
+        trackfilename = trackfilename.replace(u".wav", u".mp3")
     elif constants.OUTPUTFORMAT == "flac":
         print "Making flac..."
         pictureclause = u""
