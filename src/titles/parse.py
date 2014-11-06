@@ -27,6 +27,7 @@ for fn in glob.glob("pagecounts-????????-??????"):
         try:
             line = line.decode("utf8")
             line = unicodedata.normalize("NFC", line)
+            line = line.replace("`", "'")
         except UnicodeDecodeError:
             errors += 1
             continue
