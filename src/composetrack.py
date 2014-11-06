@@ -84,7 +84,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
 
     if constants.OUTPUTFORMAT == "mp3":
         print "Making mp3..."
-        id3tags = u' --ta "Jumpcity Records" --ty %04d' % datetime.date.today().year
+        id3tags = u' --ta "Jump City Records" --ty %04d' % datetime.date.today().year
         if albumname:
             id3tags += u' --tl "%s"' % albumname
         if trackname:
