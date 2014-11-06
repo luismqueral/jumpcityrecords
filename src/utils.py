@@ -45,6 +45,19 @@ def seconds2hhmmss(x):
         return "%02d:%02d:%02d" % (h, m, s)
 
 
+def seconds2hmmss(x):
+    "Convert a number of seconds (as a float) to a string like '1:23:58'."
+    left = float(x)
+    h = int(left / 3600.0)
+    left -= 3600.0 * h
+    m = int(left / 60.0)
+    left -= 60.0 * m
+    s = int(left)
+    left -= s
+    return "%d:%02d:%02d" % (h, m, s)
+
+
+
 def execute(cmd):
     """ Execute a command and return its standard output and standard error. """
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
