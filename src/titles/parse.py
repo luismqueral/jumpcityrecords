@@ -8,6 +8,7 @@ import time
 import marshal
 import random
 import re
+import unicodedata
 
 # Don't read titles from these projects.
 forbiddenprojects = set(("Www","am", "AR", "ar", "arc", "arz", "as", "bh", "bn", "bo", "bpy", "chr",
@@ -25,6 +26,7 @@ for fn in glob.glob("pagecounts-????????-??????"):
         line = urllib2.unquote(line.strip()).replace("_", " ")
         try:
             line = line.decode("utf8")
+            line = unicodedata.normalize("NFC", line)
         except UnicodeDecodeError:
             errors += 1
             continue
