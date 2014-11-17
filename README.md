@@ -94,19 +94,25 @@ $ python randomdraw.py  (could take some time, XQuartz has to start too)
 
 ### Example Album
 You can view all of the Jump City Records releases here http://jumpcityrecords.bandcamp.com
-'''
+
 ![Example Album Art](https://i1.sndcdn.com/artworks-000097400822-xhvfd3-t500x500.jpg)
 
 ░ [11.16.14 / 23:49]
+
+
 01 Pervomaiske 3:04
+
 02 Alexander Johnston 1:10
+
 03 Petter Rudi 3:48
+
 04 Living Planet Report 4:21
+
 05 Andrea Chenier 2:54
 
 *Listen here:* https://soundcloud.com/jumpcityrecords/sets/111614-2349a
 
-'''
+
 
 ### Colophon
 - *SoX* http://sox.sourceforge.net/
