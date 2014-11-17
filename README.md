@@ -59,6 +59,8 @@ combinations with both upper and lowercase characters.
 
 **Duration of Tracks:** each track should be no shorter than 15 seconds and no longer than 6 minutes.
 
+——————————————————————————————————————————
+
 The audio created by Jump City Records is entirely sample-based. The samples are organized in a directory of 
 folders filled with a variety of audio formats (_assets). When run, the script selects one folder and three random 
 audio samples within it. It places each of these audio files on top of each other in SoX, applies a chain of effects to each track, and exports the master track as a .flac. It will do this (x) times, determined by the script.
@@ -121,21 +123,17 @@ $ python randomdraw.py  (could take some time, XQuartz has to start too)
 ```
 
 ### Example Album
-You can view all of the Jump City Records releases here http://jumpcityrecords.bandcamp.com
+You can view all of the Jump City Records releases here http://soundcloud.com/jumpcityrecords
 
 ![Example Album Art](https://i1.sndcdn.com/artworks-000097400822-xhvfd3-t500x500.jpg)
 
 ░ [11.16.14 / 23:49]
 
-01 Pervomaiske 3:04
-
-02 Alexander Johnston 1:10
-
-03 Petter Rudi 3:48
-
-04 Living Planet Report 4:21
-
-05 Andrea Chenier 2:54
+* 01 Pervomaiske 3:04
+* 02 Alexander Johnston 1:10
+* 03 Petter Rudi 3:48
+* 04 Living Planet Report 4:21
+* 05 Andrea Chenier 2:54
 
 *Listen here:* https://soundcloud.com/jumpcityrecords/sets/111614-2349a
 
