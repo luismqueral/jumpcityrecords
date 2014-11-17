@@ -35,13 +35,42 @@
 
 Jump City Records is an experimental, open-source record label that produces and releases its albums through a series of python bots. It was designed by Luis Queral (http://luisquer.al) and engineered by Michiel Overtoom (http://www.michielovertoom.com/).
 
-### How it Works
-[description/graph goes here]
+## Process
 
-### Installing on Linux (Ubuntu 14.04)
+**When run, the script begins by randomly assigning the 
+following variables:**
+* Album Title
+* Number of Tracks
+* Title of Tracks
+* Duration of Tracks
+
+——————————————————————————————————————————
+
+**Album Title:** album titles are 8 character, alphanumeric 
+combinations with both upper and lowercase characters.
+ex. 2Pgiw3tW
+ex. TkQ2pz2k
+
+**Number of Tracks:** each album should contain anywhere from 
+3-23 tracks.
+ex. Yuuka Maeda
+ex. Tartu Town Hall
+
+**Track Titles:** generated via the Wikipedia API from random article titles.
+
+**Duration of Tracks:** each track should be no shorter than 15 seconds and no longer than 15 minutes.
+
+The audio created by Jump City Records is entirely sample-based. The samples are organized in a directory of 
+folders filled with a variety of audio formats (_assets). When run, the script selects one folder and three random 
+audio samples within it. It places each of these audio files on top of each other in SoX, applies a chain of effects to each track, and exports the master track as a .flac. It will do this (x) times, determined by the script.
+The file location for the output would be within a folder named _albums.
+
+![graph](http://i.imgur.com/15q5w2M.png)
+
+## Installing on Linux (Ubuntu 14.04)
 ```sudo apt-get install git python-cairo lame sox libsox-fmt-all libav-tools flac```
 
-### Installing on OSX
+## Installing on OSX
 Installing software for running jumpcity on OSX Yosemite:
 
 A word of warning: this will override the Apple-supplied version of Python with the 2.7.8 that Homebrew supplies, at least in Terminal sessions. I don't know what other consequences this causes, but as far as I can see, everything works as usual.
