@@ -28,7 +28,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         targetduration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR))
 
     asset = random.choice([name for name in glob.glob("../_assets/*") if os.path.isdir(name)])
-    print "Creating a track from '%s' asset, target duration %s" % (asset, utils.seconds2hhmmss(targetduration))
+    print "\x1b[36m" + "\x1b[1m" + "\n Creating a track from '%s' asset, target duration %s \n" % (asset, utils.seconds2hhmmss(targetduration)) + "\x1b[22m" + "\x1b[37m"
     fns = [fn for fn in glob.glob(os.path.join(asset, "*")) if not fn.endswith(".m4a")]
 
     mixercmd = "sox -m "
@@ -37,7 +37,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         success, fndur, errors = utils.soundfileduration(fn)
         if not success:
             raise ValueError("generate() can't determine the duration of '%s': %s" % (fn, errors))
-        print "    Source for layer%d: %s (duration %s)" % (nr, fn, utils.seconds2hhmmss(fndur))
+        print "\x1b[1m" + "    Source for layer%d: %s (duration %s)" % (nr, fn, utils.seconds2hhmmss(fndur)) + "\x1b[22m"
         # If sample duration is longer than 'targetduration' seconds, select a random fragment from it, and fade it out.
         fade = trim = ""
         if fndur > targetduration:
@@ -66,7 +66,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         result, layerdur, errors = utils.soundfileduration(layerfn)
         if errors:
             raise ValueError("generate() can't determine duration of '%s': %s" % (layerfn, errors))   
-        print "    ...resulting duration: %s" % utils.seconds2hhmmss(layerdur)
+        print "    ...resulting duration: %s \n" % utils.seconds2hhmmss(layerdur)
         mixercmd += '"%s" ' % layerfn
 
     trackfilename = "track-%s.wav" % datetime.datetime.now().strftime("%Y-%m-%d.%H-%M-%S")
@@ -75,7 +75,8 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
     _, errors = utils.soxexecute(mixercmd)
     if errors:
         raise ValueError("generate() can't mix: %s" % (trackfilename, errors))   
-    print "done"
+    print ""
+    print "\x1b[92m" + "\x1b[1m" + "done" + "\x1b[22m" + "\x1b[37m"
 
     os.system("rm layer*.wav") # Remove tempfiles.
 
@@ -83,6 +84,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         os.system("play -q %s" % trackfilename)
 
     if constants.OUTPUTFORMAT == "mp3":
+        print ""
         print "Making mp3..."
         id3tags = u' --ta "Jump City Records" --ty %04d' % datetime.date.today().year
         if albumname:
@@ -97,6 +99,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         os.unlink(trackfilename)
         trackfilename = trackfilename.replace(u".wav", u".mp3")
     elif constants.OUTPUTFORMAT == "flac":
+        print ""
         print "Making flac..."
         pictureclause = u""
         if picturefilename:

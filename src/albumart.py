@@ -21,7 +21,7 @@ from rotate import Rectangle, Point
 import constants
 
 # Tryout: alternate layout for phone (makes text readable)
-PHONE = True
+PHONE = False
 
 def randomcolor(transfrom=None, transto=None):
     if transfrom is None:
@@ -39,7 +39,7 @@ def randompastelcolor():
 
 def randomrectangle_candidate(w, h):
     center = Point(rnd(w), rnd(h))
-    rw = max(rnd(w * 0.9), 20) # Not too thin: minimum width and height 20 pixels.
+    rw = max(rnd(w * 0.9), 30) # Not too thin: minimum width and height 20 pixels.
     rh = max(rnd(h * 0.9), 20)
     r = Rectangle(
         Point(center.x - rw / 2, center.y + rh / 2),
@@ -99,7 +99,7 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 cr.fill()
         # Album title.
         cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
-        cr.select_font_face("Transport Medium", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.select_font_face("Transport Heavy", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         if PHONE:
             cr.set_font_size(h * 0.09)
             albumtitle_baseline = h * 0.82
@@ -116,7 +116,7 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
         cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         if PHONE:
-            cr.set_font_size(h * 0.0849)
+            cr.set_font_size(h * 0.1849)
             recordlabelname_baseline = h * 0.95
         else:
             cr.set_font_size(h * 0.027)
