@@ -48,17 +48,16 @@ following variables:**
 
 **Album Title:** album titles are 8 character, alphanumeric 
 combinations with both upper and lowercase characters.
-ex. 2Pgiw3tW
-ex. TkQ2pz2k
+* ex. 2Pgiw3tW
+* ex. TkQ2pz2k
 
-**Number of Tracks:** each album should contain anywhere from 
-3-23 tracks.
-ex. Yuuka Maeda
-ex. Tartu Town Hall
+**Number of Tracks:** each album should contain anywhere from 3-8 tracks.
 
 **Track Titles:** generated via the Wikipedia API from random article titles.
+* ex. Yuuka Maeda
+* ex. Tartu Town Hall
 
-**Duration of Tracks:** each track should be no shorter than 15 seconds and no longer than 15 minutes.
+**Duration of Tracks:** each track should be no shorter than 15 seconds and no longer than 6 minutes.
 
 The audio created by Jump City Records is entirely sample-based. The samples are organized in a directory of 
 folders filled with a variety of audio formats (_assets). When run, the script selects one folder and three random 
