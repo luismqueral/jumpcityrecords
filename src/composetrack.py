@@ -108,7 +108,7 @@ def generate(targetduration=None, albumname=None, trackname=None, picturefilenam
         if tags:
             for field, value in tags.iteritems():
                 if field == "DESCRIPTION":
-                    tagclause += u"--tag-from-file=%s=%s " % (field, value)
+                    tagclause += u'--tag-from-file=%s="%s" ' % (field, value)
                 else:
                     tagclause += u'--tag=%s="%s" ' % (field, value)                    
         cmd = u'flac -s -f -8 --delete-input-file %s %s "%s"' % (pictureclause, tagclause, trackfilename)

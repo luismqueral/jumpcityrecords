@@ -43,7 +43,7 @@ class AlbumTracks(object):
 
     def generatealbum(self):
         title = utils.randomname()
-        datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
+        datestamp = datetime.datetime.now().strftime("%Y-%m-%d / %H:%M:%S")
         trackcount = int(random.uniform(constants.MINTRACKSPERALBUM, constants.MAXTRACKSPERALBUM + 1))
         seen = set()
         tracks = []
