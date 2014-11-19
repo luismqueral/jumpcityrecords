@@ -20,9 +20,6 @@ import rotate
 from rotate import Rectangle, Point
 import constants
 
-# Tryout: alternate layout for phone (makes text readable)
-PHONE = False
-
 def randomcolor(transfrom=None, transto=None):
     if transfrom is None:
         return rnd(1), rnd(1), rnd(1)
@@ -75,12 +72,9 @@ def drawrectangle(cr, r):
 
 def render(cr, w, h, albumtitle=None, datestamp=None):
     if datestamp is None:
-        datestamp = datetime.datetime.now().strftime("%m.%d.%y / %H:%M")
+        datestamp = datetime.datetime.now().strftime("%Y-%m-%d / %H:%M:%S")
     if have_cairo:
-        if PHONE:
-            splith = h * 0.7
-        else:
-            splith = h * 0.8        
+        splith = h * 0.85
         # Start with white background.
         cr.set_source_rgb(1, 1, 1) # White.
         cr.rectangle(0, 0, w, h)
@@ -97,42 +91,13 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 r = randomrectangle(w, splith)
                 drawrectangle(cr, r)
                 cr.fill()
-        # Album title.
-        cr.set_source_rgb(0.12, 0.12, 0.12) # Almost black.
-        cr.select_font_face("Transport Heavy", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        if PHONE:
-            cr.set_font_size(h * 0.09)
-            albumtitle_baseline = h * 0.82
-            albumtitle_left = w * 0.0275
-        else:
-            cr.set_font_size(h * 0.064)
-            albumtitle_baseline = h * 0.897
-            albumtitle_left = w * 0.0275
-        cr.move_to(albumtitle_left, albumtitle_baseline)
-        if not albumtitle:
-            albumtitle = utils.randomname()
-        cr.show_text(albumtitle)
-        # Recordlabel name.
+	# Date and time
         cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
         cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        if PHONE:
-            cr.set_font_size(h * 0.1849)
-            recordlabelname_baseline = h * 0.95
-        else:
-            cr.set_font_size(h * 0.027)
-            recordlabelname_baseline = h * 0.95
-        cr.move_to(albumtitle_left, recordlabelname_baseline)
-        cr.show_text("jump city records")
-        # Release date.
-        if PHONE:
-            cr.set_font_size(h * 0.07)
-            releasedate_baseline = h * 0.82           
-            releasedate_left = w * 0.6
-            datestamp = datestamp[:8]
-        else:
-            releasedate_baseline = recordlabelname_baseline
-            releasedate_left = w * 0.68
-        cr.move_to(releasedate_left, releasedate_baseline)
+        cr.set_font_size(h * 0.065)
+	baseline = h * 0.95
+	_, _, textw, _, _, _ = cr.text_extents(datestamp)
+        cr.move_to(w / 2 - textw / 2, baseline) # Center text horizontally.
         cr.show_text(datestamp)
         # Outline.
         cr.rectangle(0, 0, w, h)
@@ -140,10 +105,9 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         cr.set_line_width(1)
         cr.stroke()
     else:
-        if PHONE:
-            splith = h * 0.7
-        else:
-            splith = h * 0.8
+	raise Exception("PIL/pillow rendering not implemented yet. Install cairo and pycairo and run again.")
+	# TODO: Finish this code path.
+        splith = h * 0.8
         # Colored, transparent upper pane.
         draw = ImageDraw.Draw(cr, "RGBA")
         color = tuple([int(val * 255) for val in randomcolor(0.8, 0.9)])
@@ -156,37 +120,11 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 color = tuple([int(val * 255) for val in randompastelcolor()])
                 r = randomrectangle(w, splith)
                 draw.polygon(r, color)
-        # Album title.
-        color = (30, 30, 30) # Almost black.
-        if PHONE:
-            fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.1))
-            albumtitle_baseline = h * 0.73
-            albumtitle_left = w * 0.0275
-        else:
-            fnt = ImageFont.truetype("fonts/Transport Medium.ttf", int(h * 0.064))
-            albumtitle_baseline = h * 0.84
-            albumtitle_left = w * 0.0275
-        if not albumtitle:
-            albumtitle = utils.randomname()
-        draw.text((albumtitle_left, albumtitle_baseline), albumtitle, font=fnt, fill=color)
         # Recordlabel name.
         color = (128, 128, 128)
-        if PHONE:
-            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.09))
-            recordlabelname_baseline = h * 0.87
-        else:
-            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.027))
-            recordlabelname_baseline = h * 0.93
-        draw.text((albumtitle_left, recordlabelname_baseline), "jump city records", font=fnt, fill=color)
-        # Release date.
-        if PHONE:
-            fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.075))
-            releasedate_baseline = h * 0.755
-            releasedate_left = w * 0.61
-            draw.text((releasedate_left, releasedate_baseline), datestamp[:8], font=fnt, fill=color)
-        else:
-            releasedate_left = w * 0.7
-            draw.text((releasedate_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
+        fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.09))
+        recordlabelname_baseline = h * 0.87
+        draw.text((albumtitle_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
         # Outline.
         color = (216, 216, 216)
         draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
