@@ -91,5 +91,5 @@ def generatealbum():
     
 
 if __name__ == "__main__":
-    for i in xrange(5):
+    for i in xrange(20):
         name = generatealbum()
