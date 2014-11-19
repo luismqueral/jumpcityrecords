@@ -118,7 +118,7 @@ _____|__________| /      /         /    / _______
 
     # Clean up
     os.unlink(descriptionfilename)
-    print
+    print "\x1b[0m"
     
 
 if __name__ == "__main__":
