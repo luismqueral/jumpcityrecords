@@ -91,12 +91,12 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 r = randomrectangle(w, splith)
                 drawrectangle(cr, r)
                 cr.fill()
-	# Date and time
+        # Date and time
         cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
         cr.select_font_face("Apercu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(h * 0.065)
-	baseline = h * 0.95
-	_, _, textw, _, _, _ = cr.text_extents(datestamp)
+        baseline = h * 0.95
+        _, _, textw, _, _, _ = cr.text_extents(datestamp)
         cr.move_to(w / 2 - textw / 2, baseline) # Center text horizontally.
         cr.show_text(datestamp)
         # Outline.
@@ -105,9 +105,8 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
         cr.set_line_width(1)
         cr.stroke()
     else:
-	raise Exception("PIL/pillow rendering not implemented yet. Install cairo and pycairo and run again.")
-	# TODO: Finish this code path.
-        splith = h * 0.8
+        # TODO: Finish this code path.
+        splith = h * 0.87
         # Colored, transparent upper pane.
         draw = ImageDraw.Draw(cr, "RGBA")
         color = tuple([int(val * 255) for val in randomcolor(0.8, 0.9)])
@@ -120,11 +119,12 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 color = tuple([int(val * 255) for val in randompastelcolor()])
                 r = randomrectangle(w, splith)
                 draw.polygon(r, color)
-        # Recordlabel name.
+        # Date and time.
         color = (128, 128, 128)
-        fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(h * 0.09))
-        recordlabelname_baseline = h * 0.87
-        draw.text((albumtitle_left, recordlabelname_baseline), datestamp, font=fnt, fill=color)
+        fnt = ImageFont.truetype("fonts/Apercu-Mono.otf", int(w * 0.07))
+        baseline = h * 0.89       
+        textw, texth = fnt.getsize(datestamp)
+        draw.text((w / 2 - textw / 2, baseline), datestamp, font=fnt, fill=color)
         # Outline.
         color = (216, 216, 216)
         draw.rectangle((0, 0, w - 1, h - 1), fill=None, outline=color)
