@@ -19,6 +19,7 @@ You can open that URL with a webbrowser, or in iTunes (via File/Subscribe to pod
 import os
 import glob
 import hashlib
+import urllib
 from lxml import etree as et
 import StringIO
 import email.Utils
@@ -80,7 +81,12 @@ for albumdir in glob.glob(os.path.join(albumsdir, "*")):
     for songfn in glob.glob(os.path.join(albumdir, "*.mp3")):
         songfn = songfn.decode("utf8")
         _, songname = songfn.rsplit("/", 1)
-        url = u"http://www.jumpcityrecords.com/albums/%s/%s" % (albumname, songname)
+        urlsongname = urllib.quote_plus(songname.encode("utf8")).replace("+", "%20")
+        url = u"http://www.jumpcityrecords.com/albums/%s/%s" % (albumname, urlsongname)
+        # Test whether URLs works OK.
+        resp = urllib.urlopen(url)
+        if resp.code != 200:
+            print "Error: '%s' can't be fetched" % url
         item = et.SubElement(channel, u"item")
         et.SubElement(item, u"title").text = songname
         # et.SubElement(item, u"{%s}author" % nsmap["itunes"]).text = u"TODO: John Doe"
