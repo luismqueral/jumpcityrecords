@@ -122,6 +122,11 @@ $ python randomdraw.py  (could take some time, XQuartz has to start too)
 - resize the app window to refresh the album art
 ```
 
+*If you installed it correctly, you'll see this:*
+
+![success](http://i.imgur.com/sbBhW11.gif)
+
+
 ### Example Album
 You can view all of the Jump City Records releases here http://soundcloud.com/jumpcityrecords
 
