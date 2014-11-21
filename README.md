@@ -120,9 +120,9 @@ $ cp /usr/local/Cellar/d-bus/1.8.8/org.freedesktop.dbus-session.plist ~/Library/
 $ launchctl load -w ~/Library/LaunchAgents/org.freedesktop.dbus-session.plist
 $ python randomdraw.py  (could take some time, XQuartz has to start too)
 - resize the app window to refresh the album art
+$ python jumpcity.py
 ```
-
-*If you installed it correctly, you'll see this:*
+**If you installed it correctly, you'll see this:**
 
 ![success](http://i.imgur.com/sbBhW11.gif)
 
