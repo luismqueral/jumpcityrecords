@@ -32,17 +32,25 @@ class AlbumTracks(object):
         self.non_english_titles = list(non_english_titles)
 
 
+    def randomtitle(self, allowparentheses=True):
+        while True:
+            if utils.rnd(100) < 80:
+                name = random.choice(self.english_titles)
+            else:
+                name = random.choice(self.non_english_titles)
+            if not allowparentheses and ("(" in name or ")" in name):
+                continue
+            return name
+            
+                
     def generatetrack(self):
         duration = int(random.uniform(constants.TRACKMINDUR, constants.TRACKMAXDUR + 1))
-        if utils.rnd(100) < 80:
-            name = random.choice(self.english_titles)
-        else:
-            name = random.choice(self.non_english_titles)
+        name = self.randomtitle()
         return name, duration
 
 
     def generatealbum(self):
-        title = utils.randomname()
+        title = self.randomtitle(False)
         datestamp = datetime.datetime.now().strftime("%Y-%m-%d / %H:%M:%S")
         trackcount = int(random.uniform(constants.MINTRACKSPERALBUM, constants.MAXTRACKSPERALBUM + 1))
         seen = set()

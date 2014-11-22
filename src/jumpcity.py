@@ -51,7 +51,7 @@ _____|__________| /      /         /    / _______
     while True:
         albumname, datestamp, tracks = at.generatealbum()
         safestamp = datestamp.replace(" / ", " ").replace(":", ".") # Most filesystems don't like / and : in filenames.
-        stampedname = u"[%s] %s" % (safestamp, albumname)
+        stampedname = u"%s (%s)" % (albumname, safestamp)
         albumdir = os.path.join("..", "_albums", stampedname)
         if os.path.exists(albumdir): # Don't overwrite existing albums with the same name.
             continue
