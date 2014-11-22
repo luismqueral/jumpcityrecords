@@ -93,17 +93,10 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 cr.fill()
         # Date and time
         cr.set_source_rgb(0.5, 0.5, 0.5) # Gray.
-<<<<<<< Updated upstream
-        cr.select_font_face("orator std", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.select_font_face("Orator", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(h * 0.065)
         baseline = h * 0.95
         _, _, textw, _, _, _ = cr.text_extents(datestamp)
-=======
-        cr.select_font_face("orator std", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        cr.set_font_size(h * 0.055)
-	baseline = h * 0.95
-	_, _, textw, _, _, _ = cr.text_extents(datestamp)
->>>>>>> Stashed changes
         cr.move_to(w / 2 - textw / 1.95, baseline) # Center text horizontally.
         cr.show_text(datestamp)
         # Outline.
@@ -128,7 +121,7 @@ def render(cr, w, h, albumtitle=None, datestamp=None):
                 draw.polygon(r, color)
         # Date and time.
         color = (128, 128, 128)
-        fnt = ImageFont.truetype("fonts/oratorStd.otf", int(w * 0.07))
+        fnt = ImageFont.truetype("fonts/Orator-regular.ttf", int(w * 0.07))
         baseline = h * 0.89       
         textw, texth = fnt.getsize(datestamp)
         draw.text((w / 2 - textw / 2, baseline), datestamp, font=fnt, fill=color)
