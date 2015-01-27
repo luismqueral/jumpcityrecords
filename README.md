@@ -11,7 +11,7 @@ following variables:**
 * Title of Tracks
 * Duration of Tracks
 
-———
+***
 
 ### Album Titles
 Album titles are 8 character, alphanumeric combinations with both upper and lowercase characters.
@@ -29,7 +29,8 @@ Track titles are generated via the Wikipedia API from random article titles.
 ### Duration of Tracks:
 Track durations are assigned randomly. They are officially set at being no shorter than 15 seconds and no longer than 6 minutes. Again this can be altered in jumpcity.py settings.
 
-———
+***
+
 ## Output
 The audio created by Jump City Records is entirely sample-based. Samples range from field recordings, avant garde / noise albums, among many other sources. Most of the audio was downloaded from[archive.org](archive.org), in addition to assorted torrent trackers. At this time, jump City Records does not have the capability to attribute the samples used, but assume that the manner in which they are manipulated (and by nature of their genre), they would be indistinguishable.
 
@@ -40,7 +41,9 @@ audio samples within it. It places each of these audio files on top of each othe
 The file location for the output would be within a folder named _albums.
 
 ![graph](http://i.imgur.com/15q5w2M.png)
-———
+
+***
+
 ## Installation Instructions
 This program has been tested on both Linux and OSX systems.
 
@@ -103,6 +106,7 @@ $ python jumpcity.py
 
 ![success](http://i.imgur.com/sbBhW11.gif)
 
+***
 
 ### Example Album
 You can view all of the Jump City Records releases here http://soundcloud.com/jumpcityrecords
@@ -135,7 +139,7 @@ view more at: http://soundcloud.com/jumpcityrecords
 
 *Listen here:* https://soundcloud.com/jumpcityrecords/sets/111614-2349a
 
-
+***
 
 ### Colophon
 
