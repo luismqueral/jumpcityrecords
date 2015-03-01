@@ -14,9 +14,9 @@ following variables:**
 ***
 
 ### Album Titles
-Album titles are 8 character, alphanumeric combinations with both upper and lowercase characters.
-* ex. 2Pgiw3tW
-* ex. TkQ2pz2k
+Track titles are generated via the Wikipedia API from random article titles.
+* ex. Stanydale
+* ex. Serua (Fijian Communal Constituency, Fiji)
 
 ### Number of Tracks
 Each album is assigned a random number of tracks. They are officially set at 3-8 tracks, although this can be changed in jumpcity.py settings.
