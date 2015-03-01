@@ -7,6 +7,7 @@ Jump City Records is an experimental, open-source record label that produces and
 **When run, the script begins by randomly assigning the 
 following variables:**
 * Album Title
+* Track titles
 * Number of Tracks
 * Title of Tracks
 * Duration of Tracks
