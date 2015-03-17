@@ -13,6 +13,12 @@ import os
 import codecs
 import constants
 import datetime
+try:
+    import scaup
+    scaup_available = True
+except ImportError:
+    scaup_available = False
+
 
 def generatealbum():
     """ Generate a complete album. """
@@ -121,8 +127,10 @@ _____|__________| /      /         /    / _______
     # Clean up
     os.unlink(descriptionfilename)
     print "\x1b[0m"
-    
+    return albumdir, albumname
 
 if __name__ == "__main__":
     for i in xrange(1):
-        name = generatealbum()
+        albumdir, albumname = generatealbum()
+        if scaup_available:
+            scaup.upload(albumname)
