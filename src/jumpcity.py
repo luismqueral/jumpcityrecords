@@ -117,8 +117,9 @@ _____|__________| /      /         /    / _______
                 print "ERROR:", e
                 continue
             break
-        # TODO: What about problematic characters in filenames, eg. ?, /, \, :
-        destname = u"%02d %s - %s.%s" % (nr + 1, albumname, trackname, constants.OUTPUTFORMAT)
+        # Convert problematic characters in filenames, eg. ?, /, \, :, to a space.
+        safetrackname = trackname.replace("?", " ").replace("/", " ").replace("\\", " ").replace(":", " ")
+        destname = u"%02d %s - %s.%s" % (nr + 1, albumname, safetrackname, constants.OUTPUTFORMAT)
         print "\x1b[92m" + "\x1b[1m" "DESTNAME:" + "\x1b[37m", destname + "\x1b[22m"
         print ""
         print " • • • • • • • • • • • • • • • • • • • • • • • • • • • • •"
@@ -132,5 +133,6 @@ _____|__________| /      /         /    / _______
 if __name__ == "__main__":
     for i in xrange(1):
         albumdir, albumname = generatealbum()
+        print "DEBUG",albumdir, albumname
         if scaup_available:
             scaup.upload(albumname)
