@@ -13,6 +13,9 @@ import os
 import codecs
 import constants
 import datetime
+""" If you want automatical uploading to SoundCloud using scaup,
+you have to place 'scaup.py' (and 'credentials.py') in the same
+directory as 'jumpcity.py'. See: https://github.com/motoom/scaup """
 try:
     import scaup
     scaup_available = True
@@ -130,9 +133,11 @@ _____|__________| /      /         /    / _______
     print "\x1b[0m"
     return albumdir, albumname
 
+
 if __name__ == "__main__":
+    if scaup_available:
+        client, _ = scaup.login()
     for i in xrange(1):
         albumdir, albumname = generatealbum()
-        print "DEBUG",albumdir, albumname
         if scaup_available:
-            scaup.upload(albumname)
+            scaup.upload(client, albumdir, title=albumname, verbose=True)
